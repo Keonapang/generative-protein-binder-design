@@ -1,0 +1,262 @@
+# # De Novo Protein Design Workflow using NIMs (skipped AlphaFold2 prediction step)
+#   modified to accept a precomputed AlphaFold2 PDB structure
+# Keona Pang
+# Apr 18, 2025
+
+# Hardware requirements: 4 x A100 CRUSOE instance
+#   4 x GPU, 47 GiB GPU memory
+#   128 GB SSD drive space, 60GiB RAM,24 CPU
+
+# INPUT FILES TO UPLOAD TO JUPYTER NOTEBOOK
+#    - `protein-binder-design_v3.ipynb` uploaded to a [public Github repo](https://github.com/Keonapang/generative-protein-binder-design/blob/main/src/protein-binder-design.ipynb)
+#   - `docker-compose.yaml` (3MB) from the original [BioNeMo repo](https://github.com/NVIDIA-BioNeMo-blueprints/generative-protein-binder-design/blob/main/deploy/docker-compose.yaml)
+#   - `cycle1_alphafold2_output.pdb` (80KB) pre-computed on [AlphaFold2 colab](https://colab.research.google.com/github/sokrypton/ColabFold/blob/main/AlphaFold2.ipynb#scrollTo=R_AH6JSXaeb2)
+
+# EXECUTION
+# cycle = 1 # cycle 1 or cycle 2
+# num_seq = 4 # number of sequences to generate per target
+# diffusion = 30 # number of diffusion steps (15-30 recommended)
+# temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
+# python SCRIPT_protein_binder_design.py --cycle 1 --num_seq 4 --diffusion 30 --temp 0.2
+
+##########################################################################
+
+import argparse
+import json
+import os
+import requests
+from enum import StrEnum, Enum  # must be Python 3.11+
+from typing import Tuple, Dict, Any, List
+from pathlib import Path
+
+parser = argparse.ArgumentParser(description="De Novo Protein Design Workflow")
+parser.add_argument("--cycle", type=int, choices=[1, 2], required=True, help="Cycle number (1 or 2)")
+
+
+parser.add_argument("--num_seq", type=int, default=1, help="Number of sequences to generate per target")
+parser.add_argument("--diffusion", type=int, default=20, help="Number of diffusion steps (15-30 recommended)")
+parser.add_argument("--temp", type=float, default=0.2, help="Sampling temperature (range: 0-1)")
+args = parser.parse_args()
+
+# Assign input arguments to variables
+cycle = args.cycle
+num_seq = args.num_seq
+diffusion = args.diffusion
+temp = args.temp
+
+# cycle = 1 # cycle 1 or cycle 2
+# num_seq = 4 # number of sequences to generate per target
+# diffusion = 30 # number of diffusion steps (15-30 recommended)
+# temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
+
+# if cycle == 1, then run code below
+
+root = "/home/ubuntu/nvidia-workbench"
+print(f"Generating {num_seq_per_target} sequence per target...")
+
+if num_seq > 1: # if num_seq > 1, then run code below
+    if cycle == 1:
+        name = f"cycle1_{num_seq}seqs_{diffusion}diff_{temp}temp"
+        outdir = f"{root}/cycle1_output"
+        contigs="A400-600/0 15-25"
+        precomputed_pdb_path = "cycle1_alphafold2_output.pdb" # converts pdb_id to a Path Object;
+        target_sequence="MDPPRPALLALLALPALLLLLLAGARAEEEMLENVSLVCPKDATRFKHLRKYTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGIISALLVPPETEEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPLALIKGMTRPLSTLISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKINSRFFGEGTKKMGLAFESTKSTSPPKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLYALSHAVNNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTMEQLTPELKSSILKCVQSTKPSLMIQKAAIQALRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKSVSLPSLDPASAKIEGNLIFDPNNYLPKESMLKTTLTAFGFASADLIEIGLEGKGFEPTLEALFGKQGFFPDSVNKALYWVNGQVPDGVSKVLVDHFGYTKDDKHEQDMVNGIMLSVEKLIKDLKSKEVPEARAYLRILGEELGFASLHDLQLLGKLLLMGARTLQGIPQMIGEVIRKGSKNDFFLHYIFMENAFELPTGAGLQLQISSSGVIAPGAKAGVKLEVANMQAELVAKPSVSVEFVTNMGIIIPDFARSGVQMNTNFFHESGLEAHVALKAGKLKFIIPSPKRPVKLLSGGNTLHLVSTTKTEVIPPLIENRQSWSVCKQVFPGLNYCTSGAYSNASSTDSASYYPLTGDTRLELELRPTGEIEQYSVSATYELQREDRALVDTLKFVTQAEGAKQTEATMTFKYNRQSMTLSSEVQIPDFDVDLGTILRVNDESTEGKTSYRLTLDIQNKKITEVALMGHLSCDTKEERKIKGVISIPRLQAEARSEILAHWSPAKLLLQMDSSATAYGSTVSKRVAWHYDEEKIEFEWNTGTNVDTKKMTSNFPVDLSDYPKSLHMYANRLLDHRVPQTDMTFRHVGSKLIVAMSSWLQKASGSLPYTQTLQDHLNSLKEFNLQNMGLPDFHIPENLFLKSDGRVKYTLNKN"
+    elif cycle == 2:
+        name = f"cycle2_{num_seq}seqs_{diffusion}diff_{temp}temp"
+        outdir = f"{root}/cycle2_output"
+        contigs="A100-300/0 15-25"
+        target_sequence="GKIDFLNNYALFLSPSAQQASWQVSARFNQYKYNQNFSAGNNENIMEAHVGINGEANLDFLNIPLTIPEMRLPYTIITTPPLKDFSLWEKTGLKEFLKTTKQSFDLSVKAQYKKNKHRHSITNPLAVLCEFISQSIKSFDRHFEKNRNNALDFVTKSYNETKIKFDKYKAEKSHDELPRTFQIPGYTVPVVNVEVSPFTIEMSAFGYVFPKAVSMPSFSILGSDVRVPSYTLILPSLELPVLHVPRNLKLSLPDFKELCTISHIFIPAMGNITYDFSFKSSVITLNTNAELFNQSDIVAHLLSSSSSVIDALQYKLEGTTRLTRKRGLKLATALSLSNKFVEGSHNSTVSLTTKNMEVSVATTTKAQIPILRMNFKQELNGNTKSKPTVSSSMEFKYDFNSSMLYSTAKGAVDHKLSLESLTSYFSIESSTKGDVKGSVLSREYSGTIASEANTYLNSKSTRSSVKLQGTSKIDDIWNLEVKENFAGEATLQRIYSLWEHSTKNHLQLEGLFFTNGEHTSKATLELSPWQMSALVQVHASQPSSFHDFPDLGQEVALNANTKNQKIRWKNEVRIHSGSFQSQVELSNDQEKAHLDIAGSLEGHLRFLKNIILPVYDKSLWDFLKLDVTTSIGRRQHLRVSTAFVYTKNPNGYSFSIPVKVLADKFIIPGLKLNDLNSVLVMPTFHVPFTDLQVPSCKLDFREIQIYKKLRTSSFALNLPTLPEVKFPEVDVLTKYSQPEDSLIPFFEITVPESQLTVSQFTLPKSVSDGIAALDLNAVANKIADFELPTIIVPEQTIEIPSIKFSVPAGIVIPSFQALTARFEVDSPVYNATWSASLKNKADYVETVLDSTCSSTVQFLEYELNVLGTHKIEDGTLASKTKGTFAHRDFSAEYEEDGKYEGLQEWEGKAHLNIKSPAFTDLHLRYQKDKKGISTSAASPAVGTVGMDMDEDDDFSKWNFYYSPQSSPDKKLTIFKTELRVRESDEETQIKVNWEEEAASGLLTSLKDNVPKATGVLYDYVNKYHWEHTGLTLREVSSKLRRNLQNNAEWVYQGAIRQIDDIDVRFQKAASGTTGTYQEWKDKAQNLYQELLTQEGQASFQGLKDNVFDGLVRVTQEFHMKVKHLIDSLIDFLNFPRFQFPGKPGIYTREELCTMFIREVGTVLSQVYSKVHNGSEILFSYFQDLVITLPFELRKHKLIDV"
+        precomputed_pdb_path = "cycle2_alphafold2_output.pdb" # 
+    else:
+        raise ValueError("Invalid cycle number. Please set cycle to 1 or 2.")
+    
+    cycle = ExampleRequestParams(
+        target_sequence= target_sequence,
+        contigs=contigs,  # Region A400-A600, peptides 15-25 residues long
+        hotspot_res=[], 
+        input_pdb_chains=[], # [Optional] default is to design for all chains in the protein
+        ca_only=False, # [Optional]  CA-only model helps to address specific needs in protein design where focusing on the alpha carbon (CA)
+        use_soluble_model=True, 
+        sampling_temp=[temp], # (range: 0 - 1) adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
+        diffusion_steps=diffusion, # 15-30 steps are recommended for protein design tasks
+        num_seq_per_target=num_seq  # Generate 4 binders
+    )
+
+if num_seq == 1: # if num_seq > 1, then run code below
+    if cycle == "1A": 
+
+
+os.makedirs(outdir, exist_ok=True)
+
+
+##############################################################
+# SET UP 
+##############################################################
+# Authenticator for NGC API
+
+NVIDIA_API_KEY = os.getenv("NGC_CLI_API_KEY") # NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY") or input("Paste Run Key: ")
+if not NVIDIA_API_KEY:
+    raise ValueError("NGC_CLI_API_KEY environment variable is not set. Please export it before running the script.")
+
+# Connect to NIMs
+HEADERS = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {NVIDIA_API_KEY}",
+    "poll-seconds": "900"
+}
+NIM_HOST_URL_BASE = "http://localhost"
+
+# 3 different endpoints for the models
+class NIM_PORTS(Enum):
+    RFDIFFUSION_PORT = 8082
+    PROTEINMPNN_PORT = 8083
+    AF2_MULTIMER_PORT = 8084
+
+class NIM_ENDPOINTS(StrEnum):
+    RFDIFFUSION =  "biology/ipd/rfdiffusion/generate"
+    PROTEINMPNN =  "biology/ipd/proteinmpnn/predict"
+    AF2_MULTIMER = "protein-structure/alphafold2/multimer/predict-structure-from-sequences"
+
+def query_nim(
+            payload: Dict[str, Any],
+            nim_endpoint: str,
+            headers: Dict[str, str] = HEADERS,
+            base_url: str = "http://localhost",
+            nim_port: int = 8080,
+            echo: bool = False) -> Tuple[int, Dict]:
+    function_url = f"{base_url}:{nim_port}/{nim_endpoint}"
+    if echo:
+        print("*"*80)
+        print(f"\tURL: {function_url}")
+        print(f"\tPayload: {payload}")
+        print("*"*80)
+    response = requests.post(function_url,
+                            json=payload,
+                            headers=headers)
+    if response.status_code == 200:
+        return response.status_code, response.json()
+    else:
+        raise Exception(f"Error: response returned code [{response.status_code}], with text: {response.text}")
+
+def check_nim_readiness(nim_port: NIM_PORTS,
+                        base_url: str = NIM_HOST_URL_BASE,
+                        endpoint: str = "v1/health/ready") -> bool:
+    """
+    Return true if a NIM is ready.
+    """
+    try:
+        response = requests.get(f"{base_url}:{nim_port}/{endpoint}")
+        d = response.json()
+        if "status" in d:
+            if d["status"] == "ready":
+                return True
+        return False
+    except Exception as e:
+        print(e)
+        return False
+    
+def get_reduced_pdb(pdb_id: str, rcsb_path: str = None) -> str:
+    pdb = Path(pdb_id)
+    if not pdb.exists() and rcsb_path is not None:
+        pdb.write_text(requests.get(rcsb_path).text)
+    lines = filter(lambda line: line.startswith("ATOM"), pdb.read_text().split("\n"))
+    return "\n".join(list(lines))
+class ExampleRequestParams:
+    def __init__(self,
+                target_sequence: str,
+                contigs: str, 
+                hotspot_res: List[str],
+                input_pdb_chains: List[str],
+                ca_only: bool,
+                use_soluble_model: bool,
+                sampling_temp: List[float],
+                diffusion_steps: int = 15,
+                num_seq_per_target: int = 20):
+        self.target_sequence = target_sequence
+        self.contigs = contigs
+        self.hotspot_res = hotspot_res
+        self.input_pdb_chains = input_pdb_chains
+        self.ca_only = ca_only
+        self.use_soluble_model = use_soluble_model
+        self.sampling_temp = sampling_temp
+        self.diffusion_steps = diffusion_steps
+        self.num_seq_per_target = num_seq_per_target
+status = check_nim_readiness(NIM_PORTS.RFDIFFUSION_PORT.value)
+print(f"RFDiffusion ready: {status}")
+status = check_nim_readiness(NIM_PORTS.PROTEINMPNN_PORT.value)
+print(f"ProteinMPNN ready: {status}")
+
+##############################################################
+# 2. RFdiffusion
+##############################################################
+
+example=cycle
+
+print(f"Running RFdiffusion....")
+precomputed_pdb=get_reduced_pdb(precomputed_pdb_path, rcsb_path=None)
+rfdiffusion_query = {
+    "input_pdb": precomputed_pdb,  # Now using the precomputed PDB structure
+    "contigs": example.contigs,
+    "diffusion_steps": example.diffusion_steps
+    # "hotspot_res": example.hotspot_res
+}
+rc, rfdiffusion_response = query_nim(
+    payload=rfdiffusion_query,
+    nim_endpoint=NIM_ENDPOINTS.RFDIFFUSION.value,
+    nim_port=NIM_PORTS.RFDIFFUSION_PORT.value
+)
+## Print the first 160 characters of the RFDiffusion PDB output
+print(rfdiffusion_response["output_pdb"][0:160])
+with open(f"{root}/2_rfdiffusion_{name}.pdb", "w") as pdb_file:
+    pdb_file.write(rfdiffusion_response["output_pdb"])
+
+##############################################################
+# 3. ProteinMPNN
+##############################################################
+
+print(f"Running ProteinMPNN....")
+proteinmpnn_query = {
+        "input_pdb" : rfdiffusion_response["output_pdb"],
+        "input_pdb_chains" : example.input_pdb_chains,
+        "ca_only" : example.ca_only,
+        "use_soluble_model" : example.use_soluble_model,
+        "num_seq_per_target" : example.num_seq_per_target,
+        "sampling_temp" : example.sampling_temp
+}
+rc, proteinmpnn_response = query_nim(
+    payload=proteinmpnn_query,
+    nim_endpoint=NIM_ENDPOINTS.PROTEINMPNN.value,
+    nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
+)
+
+fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
+binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
+
+# Save binder_target_pairs to a .txt file
+with open(f"{root}/3_proteinmpnn_target_{name}.txt", "w") as txt_file:
+    for i, pair in enumerate(binder_target_pairs):
+        binder, target = pair
+        txt_file.write(f"Target: {target}\n")
+        txt_file.write("\n")  # Add a blank line between pairs for readability
+
+# Save proteinmpnn_response["mfasta"] to a .fasta file
+with open(f"{root}/3_proteinmpnn_{name}.fasta", "w") as fasta_file:
+    fasta_file.write(proteinmpnn_response["mfasta"])
+
+# Extract scores/probs array
+scores = proteinmpnn_response["scores"]
+probs = proteinmpnn_response["probs"]
+
+# Save scores and probs to files
+with open(f"{root}/3_proteinmpnn_scores_{name}.txt", "w") as scores_file:
+    for i, score in enumerate(scores):
+        scores_file.write(f"Sequence {i+1}: Score = {score}\n")
+
+with open(f"{root}/3_proteinmpnn_probs_{name}.txt", "w") as probs_file:
+    for i, prob_matrix in enumerate(probs):
+        probs_file.write(f"Sequence {i+1}:\n")
+        for position_probs in prob_matrix:
+            probs_file.write(",".join(map(str, position_probs)) + "\n")
+        probs_file.write("\n")
+
+
