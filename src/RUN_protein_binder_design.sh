@@ -19,7 +19,7 @@ sudo apt-get install -y docker-compose
 sudo apt install python3.11
 
 # Log in to Docker
-export NGC_CLI_API_KEY=<enter-key> # enter personal API key
+export NGC_CLI_API_KEY=<enter-key> #  export NGC_CLI_API_KEY=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
 docker login nvcr.io --username='$oauthtoken' --password="${NGC_CLI_API_KEY}"
 
 ## Create the nim cache directory to download any model data to your local/server disk 
@@ -43,11 +43,11 @@ diffusion = 30 # number of diffusion steps (15-30 recommended)
 temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
 
 for cycle in "1" "2"; do
-    python3.11 1_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 30 --temp 0.5
+    python3.11 SCRIPT_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 30 --temp 0.5
 done
 
 for cycle in "1A" "1B" "1C" "1D" "2A" "2B" "2C" "2D"; do
-    python3.11 1_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 30 --temp 0.1
+    python3.11 SCRIPT_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 30 --temp 0.1
 done
 
 
