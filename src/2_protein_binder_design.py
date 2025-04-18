@@ -36,7 +36,7 @@
 # docker compose 
 
 # pip install requests
-# python SCRIPT_protein_binder_design.py --cycle 1 --num_seq 4 --diffusion 30 --temp 0.2
+# python SCRIPT_protein_binder_design.py --cycle 1 --num_seq 5 --diffusion 30 --temp 0.2
 
 ##########################################################################
 
@@ -69,7 +69,7 @@ print(f"Generating {num_seq} sequences per target for cycle {cycle}...")
 
 if num_seq > 1: # if num_seq > 1, then run code below
     if cycle == "1":
-        contigs="A400-600/0 15-25"
+        contigs="A300-550/0 15-25"
         precomputed_pdb_path = "cycle1_alphafold2_output.pdb" # converts pdb_id to a Path Object;
         target_sequence="MDPPRPALLALLALPALLLLLLAGARAEEEMLENVSLVCPKDATRFKHLRKYTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGIISALLVPPETEEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPLALIKGMTRPLSTLISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKINSRFFGEGTKKMGLAFESTKSTSPPKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLYALSHAVNNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTMEQLTPELKSSILKCVQSTKPSLMIQKAAIQALRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKSVSLPSLDPASAKIEGNLIFDPNNYLPKESMLKTTLTAFGFASADLIEIGLEGKGFEPTLEALFGKQGFFPDSVNKALYWVNGQVPDGVSKVLVDHFGYTKDDKHEQDMVNGIMLSVEKLIKDLKSKEVPEARAYLRILGEELGFASLHDLQLLGKLLLMGARTLQGIPQMIGEVIRKGSKNDFFLHYIFMENAFELPTGAGLQLQISSSGVIAPGAKAGVKLEVANMQAELVAKPSVSVEFVTNMGIIIPDFARSGVQMNTNFFHESGLEAHVALKAGKLKFIIPSPKRPVKLLSGGNTLHLVSTTKTEVIPPLIENRQSWSVCKQVFPGLNYCTSGAYSNASSTDSASYYPLTGDTRLELELRPTGEIEQYSVSATYELQREDRALVDTLKFVTQAEGAKQTEATMTFKYNRQSMTLSSEVQIPDFDVDLGTILRVNDESTEGKTSYRLTLDIQNKKITEVALMGHLSCDTKEERKIKGVISIPRLQAEARSEILAHWSPAKLLLQMDSSATAYGSTVSKRVAWHYDEEKIEFEWNTGTNVDTKKMTSNFPVDLSDYPKSLHMYANRLLDHRVPQTDMTFRHVGSKLIVAMSSWLQKASGSLPYTQTLQDHLNSLKEFNLQNMGLPDFHIPENLFLKSDGRVKYTLNKN"
     elif cycle == "2":
@@ -92,7 +92,7 @@ if num_seq == 1: # if num_seq > 1, then run code below
         if cycle == "1C":
             contigs="A500-540/0 15-25"
         if cycle == "1D":
-            contigs="A550-590/0 15-25"
+            contigs="A550-600/0 15-25"
     
     elif "2" in cycle:
         target_sequence="GKIDFLNNYALFLSPSAQQASWQVSARFNQYKYNQNFSAGNNENIMEAHVGINGEANLDFLNIPLTIPEMRLPYTIITTPPLKDFSLWEKTGLKEFLKTTKQSFDLSVKAQYKKNKHRHSITNPLAVLCEFISQSIKSFDRHFEKNRNNALDFVTKSYNETKIKFDKYKAEKSHDELPRTFQIPGYTVPVVNVEVSPFTIEMSAFGYVFPKAVSMPSFSILGSDVRVPSYTLILPSLELPVLHVPRNLKLSLPDFKELCTISHIFIPAMGNITYDFSFKSSVITLNTNAELFNQSDIVAHLLSSSSSVIDALQYKLEGTTRLTRKRGLKLATALSLSNKFVEGSHNSTVSLTTKNMEVSVATTTKAQIPILRMNFKQELNGNTKSKPTVSSSMEFKYDFNSSMLYSTAKGAVDHKLSLESLTSYFSIESSTKGDVKGSVLSREYSGTIASEANTYLNSKSTRSSVKLQGTSKIDDIWNLEVKENFAGEATLQRIYSLWEHSTKNHLQLEGLFFTNGEHTSKATLELSPWQMSALVQVHASQPSSFHDFPDLGQEVALNANTKNQKIRWKNEVRIHSGSFQSQVELSNDQEKAHLDIAGSLEGHLRFLKNIILPVYDKSLWDFLKLDVTTSIGRRQHLRVSTAFVYTKNPNGYSFSIPVKVLADKFIIPGLKLNDLNSVLVMPTFHVPFTDLQVPSCKLDFREIQIYKKLRTSSFALNLPTLPEVKFPEVDVLTKYSQPEDSLIPFFEITVPESQLTVSQFTLPKSVSDGIAALDLNAVANKIADFELPTIIVPEQTIEIPSIKFSVPAGIVIPSFQALTARFEVDSPVYNATWSASLKNKADYVETVLDSTCSSTVQFLEYELNVLGTHKIEDGTLASKTKGTFAHRDFSAEYEEDGKYEGLQEWEGKAHLNIKSPAFTDLHLRYQKDKKGISTSAASPAVGTVGMDMDEDDDFSKWNFYYSPQSSPDKKLTIFKTELRVRESDEETQIKVNWEEEAASGLLTSLKDNVPKATGVLYDYVNKYHWEHTGLTLREVSSKLRRNLQNNAEWVYQGAIRQIDDIDVRFQKAASGTTGTYQEWKDKAQNLYQELLTQEGQASFQGLKDNVFDGLVRVTQEFHMKVKHLIDSLIDFLNFPRFQFPGKPGIYTREELCTMFIREVGTVLSQVYSKVHNGSEILFSYFQDLVITLPFELRKHKLIDV",
@@ -105,7 +105,7 @@ if num_seq == 1: # if num_seq > 1, then run code below
         if cycle == "2C":
             contigs="A200-240/0 15-25"
         if cycle == "2D":
-            contigs="A250-290/0 15-25"
+            contigs="A250-300/0 15-25"
     else:
         raise ValueError("Invalid cycle number.")
 
@@ -289,18 +289,13 @@ with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
         txt_file.write(f"Target {i+1}: {target}\n")
         txt_file.write("\n")  # Add a blank line between pairs for readability
 
-import json
-with open(f"{root}/3_proteinmpnn_pairs_{name}.json", "w") as json_file:
+with open(f"{outdir}/3_{name}_proteinmpnn_pairs.json", "w") as json_file:
     json.dump(binder_target_pairs, json_file, indent=4)
-# [
-#     ["BINDERSEQ1", "TARGETSEQ"],
-#     ["BINDERSEQ2", "TARGETSEQ"],
-#     ...
-# ]
 
 # Save proteinmpnn_response["mfasta"] to a .fasta file
 with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
     fasta_file.write(proteinmpnn_response["mfasta"])
+
 
 # Save scores and probs to files
 scores = proteinmpnn_response["scores"]
@@ -308,34 +303,26 @@ with open(f"{outdir}/3_{name}_proteinmpnn_scores.txt", "w") as scores_file:
     for i, score in enumerate(scores):
         scores_file.write(f"Sequence {i+1}: Score = {score}\n")
 
-probs = proteinmpnn_response["probs"]
-with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
-    for i, prob_matrix in enumerate(probs):
-        probs_file.write(f"Sequence {i+1}:\n")
-        for position_probs in prob_matrix:
-            probs_file.write(",".join(map(str, position_probs)) + "\n")
-        probs_file.write("\n")
-
-print()
-print(f"------------------------------------------------")
-print()
-
+# probs = proteinmpnn_response["probs"]
+# with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
+#     for i, prob_matrix in enumerate(probs):
+#         probs_file.write(f"Sequence {i+1}:\n")
+#         for position_probs in prob_matrix:
+#             probs_file.write(",".join(map(str, position_probs)) + "\n")
+#         probs_file.write("\n")
 
 ##############################################################
 # 4. AlphaFold2-Multimer
 ##############################################################
-
+print()
 print(f"Loading AlphaFold-Multimer...")
 print()
 
 # Load binder_target_pairs from the JSON file
-binder_target_pairs_path = f"{outdir}/3_{name}_binder_target_pairs.json"
+binder_target_pairs_path = f"{outdir}/3_{name}_proteinmpnn_pairs.json"
 with open(binder_target_pairs_path, "r") as json_file:
     binder_target_pairs = json.load(json_file)
-
-# print preview of binder_target_pairs
 print(binder_target_pairs[:2])  # Print the first 2 pairs for preview
-
 
 n_processed = 0
 multimer_response_codes = [0 for i in binder_target_pairs]
@@ -369,7 +356,7 @@ print(multimer_results[result_idx][prediction_idx][0:160])
 print()
 
 # Save all AlphaFold-Multimer results to a .txt file
-with open(f"{root}/4_multimer_{name}.txt", "w") as results_file:
+with open(f"{outdir}/4_multimer_{name}.txt", "w") as results_file:
     for i, result in enumerate(multimer_results):
         results_file.write(f"Result {i+1}:\n")  # Add a header for each result
         if result is not None:  # Check if the result exists
@@ -381,3 +368,82 @@ with open(f"{root}/4_multimer_{name}.txt", "w") as results_file:
             results_file.write("No result available for this pair.\n")
         results_file.write("-" * 50 + "\n")  # Separator between results
 
+
+####################################################################
+# PART 5: VALIDATION
+####################################################################
+
+# Function to calculate average pLDDT over all residues 
+def calculate_average_pLDDT(pdb_string):
+    total_pLDDT = 0.0
+    atom_count = 0
+    pdb_lines = pdb_string.splitlines()
+    for line in pdb_lines:
+        # PDB atom records start with "ATOM"
+        if line.startswith("ATOM"):
+            atom_name = line[12:16].strip() # Extract atom name
+            if atom_name == "CA":  # Only consider atoms with name "CA"
+                try:
+                    # Extract the B-factor value from columns 61-66 (following PDB format specifications)
+                    pLDDT = float(line[60:66].strip())
+                    total_pLDDT += pLDDT
+                    atom_count += 1
+                except ValueError:
+                    pass  # Skip lines where B-factor can't be parsed as a float
+
+    if atom_count == 0:
+        return 0.0  # Return 0 if no N atoms were found
+
+    average_pLDDT = total_pLDDT / atom_count
+    return average_pLDDT
+
+plddts = []
+for idx in range(0, len(multimer_results)):
+    if multimer_results[idx] is not None:
+        plddts.append(calculate_average_pLDDT(multimer_results[idx][0]))
+
+## Combine the results with their pLDDTs
+binder_target_results = list(zip(binder_target_pairs, multimer_results, plddts))
+
+## Sort the results by plddt
+sorted_binder_target_results = sorted(binder_target_results, key=lambda x : x[2])
+
+## print the top 5 results
+for i in range(0, len(sorted_binder_target_results)):
+    print("-"*80)
+    print(f"rank: {i}")
+    print(f"binder: {sorted_binder_target_results[i][0][0]}")
+    print(f"target: {sorted_binder_target_results[i][0][1]}")
+    print(f"pLDDT: {sorted_binder_target_results[i][2]}")
+    print("-"*80)
+
+# Save all results to a .txt file
+with open(f"4_multimer_analysis_{name}.txt", "w") as results_file:
+    # Section 1: Average pLDDT values
+    results_file.write("### Average pLDDT Values ###\n")
+    for idx, plddt in enumerate(plddts):
+        results_file.write(f"Result {idx + 1}: Average pLDDT = {plddt:.2f}\n")
+    results_file.write("\n\n")
+
+    # Section 2: Binder-Target Results with Raw Data
+    results_file.write("### Binder-Target Results (Raw Data) ###\n")
+    for idx, (pair, result, plddt) in enumerate(binder_target_results):
+        results_file.write(f"Result {idx + 1}:\n")
+        results_file.write(f"Binder: {pair[0]}\n")
+        results_file.write(f"Target: {pair[1]}\n")
+        results_file.write(f"Average pLDDT: {plddt:.2f}\n")
+        results_file.write(f"Raw Multimer Result: {result}\n")
+        results_file.write("-" * 80 + "\n")
+    results_file.write("\n\n")
+
+    # Section 3: Sorted Binder-Target Results by pLDDT
+    results_file.write("### Sorted Binder-Target Results by pLDDT ###\n")
+    for rank, (pair, result, plddt) in enumerate(sorted_binder_target_results):
+        results_file.write(f"Rank {rank + 1}:\n")
+        results_file.write(f"Binder: {pair[0]}\n")
+        results_file.write(f"Target: {pair[1]}\n")
+        results_file.write(f"Average pLDDT: {plddt:.2f}\n")
+        results_file.write("-" * 80 + "\n")
+
+print(f"------------------------------------------------")
+print()
