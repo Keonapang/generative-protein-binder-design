@@ -10,12 +10,6 @@
 #  - `docker-compose.yaml` (3MB) from the original [BioNeMo repo](https://github.com/NVIDIA-BioNeMo-blueprints/generative-protein-binder-design/blob/main/deploy/docker-compose.yaml)
 #  - `cycle1_alphafold2_output.pdb` (80KB) pre-computed on [AlphaFold2 colab](https://colab.research.google.com/github/sokrypton/ColabFold/blob/main/AlphaFold2.ipynb#scrollTo=R_AH6JSXaeb2)
 
-# EXECUTION
-cycle = 1 # cycle 1 or cycle 2
-num_seq = 4 # number of sequences to generate per target
-diffusion = 30 # number of diffusion steps (15-30 recommended)
-temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
-
 # Get from brev.nvidia
 brew install brevdev/homebrew-/brev && brev login --token <****> # Install the CLI
 brev shell <instance-name> # find instance-name on brev.nvidias # Open a terminal locally
@@ -41,5 +35,11 @@ curl localhost:8082/v1/health/ready # RFdiffusion
 curl localhost:8083/v1/health/ready # Protein MPNN
 
 pip install requests
-python SCRIPT_protein_binder_design.py --cycle 1 --num_seq 4 --diffusion 30 --temp 0.2
+
+# EXECUTION
+cycle = 1 # cycle 1 or cycle 2
+num_seq = 4 # number of sequences to generate per target
+diffusion = 30 # number of diffusion steps (15-30 recommended)
+temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
+python SCRIPT_protein_binder_design.py --cycle "1" --num_seq 4 --diffusion 30 --temp 0.2
 
