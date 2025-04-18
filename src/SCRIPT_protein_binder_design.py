@@ -37,7 +37,6 @@
 
 # pip install requests
 # python SCRIPT_protein_binder_design.py --cycle 1 --num_seq 4 --diffusion 30 --temp 0.2
-# python SCRIPT_protein_binder_design.py --cycle "1" --contig "A400-600/0 15-25" --num_seq 4 --diffusion 30 --temp 0.2
 
 ##########################################################################
 
@@ -55,7 +54,6 @@ parser.add_argument("--cycle", type=str, required=True, help="Cycle number (e.g.
 parser.add_argument("--num_seq", type=int, default=1, help="Number of sequences to generate per target")
 parser.add_argument("--diffusion", type=int, default=20, help="Number of diffusion steps (15-30 recommended)")
 parser.add_argument("--temp", type=float, default=0.2, help="Sampling temperature (range: 0-1)")
-parser.add_argument("--contig", type=str, default="20", help="Contig region (e.g., 'A400-600/0 15-25')")
 args = parser.parse_args()
 
 # Assign input arguments to variables
@@ -63,7 +61,6 @@ cycle = args.cycle
 num_seq = args.num_seq
 diffusion = args.diffusion
 temp = args.temp
-contigs = None if args.contig == "20" else args.contig  # Use None if it's the default
 
 # Set up all paths and variables
 root = "/home/ubuntu/nvidia-workbench"
