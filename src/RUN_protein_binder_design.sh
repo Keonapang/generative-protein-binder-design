@@ -42,17 +42,13 @@ num_seq = 4 # number of sequences to generate per target
 diffusion = 30 # number of diffusion steps (15-30 recommended)
 temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
 
-python3.11 1_protein_binder_design.py --cycle "1" --num_seq 4 --diffusion 30 --temp 0.5
+for cycle in "1" "2"; do
+    python3.11 1_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 30 --temp 0.5
+done
 
-python3.11 1_protein_binder_design.py --cycle "2" --num_seq 4 --diffusion 30 --temp 0.5
+for cycle in "1A" "1B" "1C" "1D" "2A" "2B" "2C" "2D"; do
+    python3.11 1_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 30 --temp 0.1
+done
 
 
-python3.11 1_protein_binder_design.py --cycle "1A" --num_seq 1 --diffusion 30 --temp 0.1
-python3.11 1_protein_binder_design.py --cycle "1B" --num_seq 1 --diffusion 30 --temp 0.1
-python3.11 1_protein_binder_design.py --cycle "1C" --num_seq 1 --diffusion 30 --temp 0.1
 
-python3.11 1_protein_binder_design.py --cycle "1D" --num_seq 1 --diffusion 30 --temp 0.1
-python3.11 1_protein_binder_design.py --cycle "2A" --num_seq 1 --diffusion 30 --temp 0.1
-python3.11 1_protein_binder_design.py --cycle "2B" --num_seq 1 --diffusion 30 --temp 0.1
-python3.11 1_protein_binder_design.py --cycle "2C" --num_seq 1 --diffusion 30 --temp 0.1
-python3.11 1_protein_binder_design.py --cycle "2D" --num_seq 1 --diffusion 30 --temp 0.1

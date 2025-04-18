@@ -142,7 +142,6 @@ class NIM_PORTS(Enum):
     RFDIFFUSION_PORT = 8082
     PROTEINMPNN_PORT = 8083
     AF2_MULTIMER_PORT = 8084
-
 class NIM_ENDPOINTS(StrEnum):
     RFDIFFUSION =  "biology/ipd/rfdiffusion/generate"
     PROTEINMPNN =  "biology/ipd/proteinmpnn/predict"
@@ -277,6 +276,8 @@ rc, proteinmpnn_response = query_nim(
     nim_endpoint=NIM_ENDPOINTS.PROTEINMPNN.value,
     nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
 )
+
+# binder sequences are stored in fasta_sequences
 fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
 binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
 
@@ -284,8 +285,18 @@ binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_seq
 with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
     for i, pair in enumerate(binder_target_pairs):
         binder, target = pair
-        txt_file.write(f"Target: {target}\n")
+        txt_file.write(f"Binder {i+1}: {binder}\n")
+        txt_file.write(f"Target {i+1}: {target}\n")
         txt_file.write("\n")  # Add a blank line between pairs for readability
+
+import json
+with open(f"{root}/3_proteinmpnn_pairs_{name}.json", "w") as json_file:
+    json.dump(binder_target_pairs, json_file, indent=4)
+# [
+#     ["BINDERSEQ1", "TARGETSEQ"],
+#     ["BINDERSEQ2", "TARGETSEQ"],
+#     ...
+# ]
 
 # Save proteinmpnn_response["mfasta"] to a .fasta file
 with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
