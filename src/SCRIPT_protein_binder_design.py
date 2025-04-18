@@ -115,22 +115,9 @@ if num_seq == 1: # if num_seq > 1, then run code below
     else:
         raise ValueError("Invalid cycle number.")
 
-cycle = ExampleRequestParams(
-    target_sequence= target_sequence,
-    contigs=contigs,  # Region A400-A600, peptides 15-25 residues long
-    hotspot_res=[], 
-    input_pdb_chains=[], # [Optional] default is to design for all chains in the protein
-    ca_only=False, # [Optional]  CA-only model helps to address specific needs in protein design where focusing on the alpha carbon (CA)
-    use_soluble_model=True, 
-    sampling_temp=[temp], # (range: 0 - 1) adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
-    diffusion_steps=diffusion, # 15-30 steps are recommended for protein design tasks
-    num_seq_per_target=num_seq  # Generate 4 binders
-)
-example=cycle
+# Set up directory
 os.makedirs(outdir, exist_ok=True)
 print(f"Output directory: {outdir}")
-
-# check if  precomputed_pdb_path exists in the current directory
 if not os.path.exists(precomputed_pdb_path):
     raise FileNotFoundError(f"Precomputed PDB file {precomputed_pdb_path} does not exist. Please check the path.")
 
@@ -230,6 +217,22 @@ status = check_nim_readiness(NIM_PORTS.RFDIFFUSION_PORT.value)
 print(f"RFDiffusion ready: {status}")
 status = check_nim_readiness(NIM_PORTS.PROTEINMPNN_PORT.value)
 print(f"ProteinMPNN ready: {status}")
+
+##############################################################
+# Query code 
+##############################################################
+cycle = ExampleRequestParams(
+    target_sequence= target_sequence,
+    contigs=contigs,  # Region A400-A600, peptides 15-25 residues long
+    hotspot_res=[], 
+    input_pdb_chains=[], # [Optional] default is to design for all chains in the protein
+    ca_only=False, # [Optional]  CA-only model helps to address specific needs in protein design where focusing on the alpha carbon (CA)
+    use_soluble_model=True, 
+    sampling_temp=[temp], # (range: 0 - 1) adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
+    diffusion_steps=diffusion, # 15-30 steps are recommended for protein design tasks
+    num_seq_per_target=num_seq  # Generate 4 binders
+)
+example=cycle
 
 ##############################################################
 # 2. RFdiffusion

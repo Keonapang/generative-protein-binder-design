@@ -41,5 +41,6 @@ cycle = 1 # cycle 1 or cycle 2
 num_seq = 4 # number of sequences to generate per target
 diffusion = 30 # number of diffusion steps (15-30 recommended)
 temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
-python SCRIPT_protein_binder_design.py --cycle "1" --num_seq 4 --diffusion 30 --temp 0.2
+
+python3.11 1_protein_binder_design.py --cycle "1" --num_seq 4 --diffusion 30 --temp 0.2
 
