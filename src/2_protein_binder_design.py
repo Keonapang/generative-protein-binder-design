@@ -235,73 +235,73 @@ cycle = ExampleRequestParams(
 )
 example=cycle
 
-##############################################################
-# 2. RFdiffusion
-##############################################################
-precomputed_pdb=get_reduced_pdb(precomputed_pdb_path, rcsb_path=None)
+# ##############################################################
+# # 2. RFdiffusion
+# ##############################################################
+# precomputed_pdb=get_reduced_pdb(precomputed_pdb_path, rcsb_path=None)
 
-print(f"Running RFdiffusion....")
-rfdiffusion_query = {
-    "input_pdb": precomputed_pdb,  # Now using the precomputed PDB structure
-    "contigs": example.contigs,
-    "diffusion_steps": example.diffusion_steps
-    # "hotspot_res": example.hotspot_res
-}
-rc, rfdiffusion_response = query_nim(
-    payload=rfdiffusion_query,
-    nim_endpoint=NIM_ENDPOINTS.RFDIFFUSION.value,
-    nim_port=NIM_PORTS.RFDIFFUSION_PORT.value
-)
+# print(f"Running RFdiffusion....")
+# rfdiffusion_query = {
+#     "input_pdb": precomputed_pdb,  # Now using the precomputed PDB structure
+#     "contigs": example.contigs,
+#     "diffusion_steps": example.diffusion_steps
+#     # "hotspot_res": example.hotspot_res
+# }
+# rc, rfdiffusion_response = query_nim(
+#     payload=rfdiffusion_query,
+#     nim_endpoint=NIM_ENDPOINTS.RFDIFFUSION.value,
+#     nim_port=NIM_PORTS.RFDIFFUSION_PORT.value
+# )
 
-# save
-print(rfdiffusion_response["output_pdb"][0:160])
-with open(f"{outdir}/2_{name}_rfdiffusion.pdb", "w") as pdb_file:
-    pdb_file.write(rfdiffusion_response["output_pdb"])
+# # save
+# print(rfdiffusion_response["output_pdb"][0:160])
+# with open(f"{outdir}/2_{name}_rfdiffusion.pdb", "w") as pdb_file:
+#     pdb_file.write(rfdiffusion_response["output_pdb"])
 
-##############################################################
-# 3. ProteinMPNN
-##############################################################
-print()
-print(f"Running ProteinMPNN....")
-proteinmpnn_query = {
-    "input_pdb" : rfdiffusion_response["output_pdb"],
-    "input_pdb_chains" : example.input_pdb_chains,
-    "ca_only" : example.ca_only,
-    "use_soluble_model" : example.use_soluble_model,
-    "num_seq_per_target" : example.num_seq_per_target,
-    "sampling_temp" : example.sampling_temp
-}
-rc, proteinmpnn_response = query_nim(
-    payload=proteinmpnn_query,
-    nim_endpoint=NIM_ENDPOINTS.PROTEINMPNN.value,
-    nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
-)
+# ##############################################################
+# # 3. ProteinMPNN
+# ##############################################################
+# print()
+# print(f"Running ProteinMPNN....")
+# proteinmpnn_query = {
+#     "input_pdb" : rfdiffusion_response["output_pdb"],
+#     "input_pdb_chains" : example.input_pdb_chains,
+#     "ca_only" : example.ca_only,
+#     "use_soluble_model" : example.use_soluble_model,
+#     "num_seq_per_target" : example.num_seq_per_target,
+#     "sampling_temp" : example.sampling_temp
+# }
+# rc, proteinmpnn_response = query_nim(
+#     payload=proteinmpnn_query,
+#     nim_endpoint=NIM_ENDPOINTS.PROTEINMPNN.value,
+#     nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
+# )
 
-# binder sequences are stored in fasta_sequences
-fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
-binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
+# # binder sequences are stored in fasta_sequences
+# fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
+# binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
 
-# Save binder_target_pairs to a .txt file
-with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
-    for i, pair in enumerate(binder_target_pairs):
-        binder, target = pair
-        txt_file.write(f"Binder {i+1}: {binder}\n")
-        txt_file.write(f"Target {i+1}: {target}\n")
-        txt_file.write("\n")  # Add a blank line between pairs for readability
+# # Save binder_target_pairs to a .txt file
+# with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
+#     for i, pair in enumerate(binder_target_pairs):
+#         binder, target = pair
+#         txt_file.write(f"Binder {i+1}: {binder}\n")
+#         txt_file.write(f"Target {i+1}: {target}\n")
+#         txt_file.write("\n")  # Add a blank line between pairs for readability
 
-with open(f"{outdir}/3_{name}_proteinmpnn_pairs.json", "w") as json_file:
-    json.dump(binder_target_pairs, json_file, indent=4)
+# with open(f"{outdir}/3_{name}_proteinmpnn_pairs.json", "w") as json_file:
+#     json.dump(binder_target_pairs, json_file, indent=4)
 
-# Save proteinmpnn_response["mfasta"] to a .fasta file
-with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
-    fasta_file.write(proteinmpnn_response["mfasta"])
+# # Save proteinmpnn_response["mfasta"] to a .fasta file
+# with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
+#     fasta_file.write(proteinmpnn_response["mfasta"])
 
 
-# Save scores and probs to files
-scores = proteinmpnn_response["scores"]
-with open(f"{outdir}/3_{name}_proteinmpnn_scores.txt", "w") as scores_file:
-    for i, score in enumerate(scores):
-        scores_file.write(f"Sequence {i+1}: Score = {score}\n")
+# # Save scores and probs to files
+# scores = proteinmpnn_response["scores"]
+# with open(f"{outdir}/3_{name}_proteinmpnn_scores.txt", "w") as scores_file:
+#     for i, score in enumerate(scores):
+#         scores_file.write(f"Sequence {i+1}: Score = {score}\n")
 
 # probs = proteinmpnn_response["probs"]
 # with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
@@ -319,7 +319,9 @@ print(f"Loading AlphaFold-Multimer...")
 print()
 
 # Load binder_target_pairs from the JSON file
-binder_target_pairs_path = f"{outdir}/3_{name}_proteinmpnn_pairs.json"
+binder_target_pairs_path = f"3_{name}_proteinmpnn_pairs.json"
+
+# binder_target_pairs_path = f"{outdir}/3_{name}_proteinmpnn_pairs.json"
 with open(binder_target_pairs_path, "r") as json_file:
     binder_target_pairs = json.load(json_file)
 print(binder_target_pairs[:2])  # Print the first 2 pairs for preview
@@ -368,7 +370,6 @@ with open(f"{outdir}/4_multimer_{name}.txt", "w") as results_file:
             results_file.write("No result available for this pair.\n")
         results_file.write("-" * 50 + "\n")  # Separator between results
 
-
 ####################################################################
 # PART 5: VALIDATION
 ####################################################################
@@ -397,6 +398,7 @@ def calculate_average_pLDDT(pdb_string):
     average_pLDDT = total_pLDDT / atom_count
     return average_pLDDT
 
+# Run 
 plddts = []
 for idx in range(0, len(multimer_results)):
     if multimer_results[idx] is not None:
@@ -418,7 +420,7 @@ for i in range(0, len(sorted_binder_target_results)):
     print("-"*80)
 
 # Save all results to a .txt file
-with open(f"4_multimer_analysis_{name}.txt", "w") as results_file:
+with open(f"{outdir}/5_{name}_assess.txt", "w") as results_file:
     # Section 1: Average pLDDT values
     results_file.write("### Average pLDDT Values ###\n")
     for idx, plddt in enumerate(plddts):

@@ -277,6 +277,7 @@ rc, proteinmpnn_response = query_nim(
     nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
 )
 
+
 # binder sequences are stored in fasta_sequences
 fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
 binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
@@ -289,14 +290,8 @@ with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
         txt_file.write(f"Target {i+1}: {target}\n")
         txt_file.write("\n")  # Add a blank line between pairs for readability
 
-import json
-with open(f"{root}/3_proteinmpnn_pairs_{name}.json", "w") as json_file:
+with open(f"{outdir}/3_{name}_proteinmpnn_pairs.json", "w") as json_file:
     json.dump(binder_target_pairs, json_file, indent=4)
-# [
-#     ["BINDERSEQ1", "TARGETSEQ"],
-#     ["BINDERSEQ2", "TARGETSEQ"],
-#     ...
-# ]
 
 # Save proteinmpnn_response["mfasta"] to a .fasta file
 with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
@@ -308,18 +303,13 @@ with open(f"{outdir}/3_{name}_proteinmpnn_scores.txt", "w") as scores_file:
     for i, score in enumerate(scores):
         scores_file.write(f"Sequence {i+1}: Score = {score}\n")
 
-probs = proteinmpnn_response["probs"]
-with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
-    for i, prob_matrix in enumerate(probs):
-        probs_file.write(f"Sequence {i+1}:\n")
-        for position_probs in prob_matrix:
-            probs_file.write(",".join(map(str, position_probs)) + "\n")
-        probs_file.write("\n")
-
-print()
-print(f"------------------------------------------------")
-print()
-
+# probs = proteinmpnn_response["probs"]
+# with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
+#     for i, prob_matrix in enumerate(probs):
+#         probs_file.write(f"Sequence {i+1}:\n")
+#         for position_probs in prob_matrix:
+#             probs_file.write(",".join(map(str, position_probs)) + "\n")
+#         probs_file.write("\n")
 
 ##############################################################
 # 4. AlphaFold2-Multimer
