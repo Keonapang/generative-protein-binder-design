@@ -67,7 +67,7 @@ root = "/home/ubuntu/nvidia-workbench"
 os.makedirs(root, exist_ok=True)
 print(f"Generating {num_seq} sequences per target for cycle {cycle}...")
 
-if num_seq > 1: # if num_seq > 1, then run code below
+if num_seq > 4: # if num_seq > 1, then run code below
     if cycle == "1":
         contigs="A300-550/0 15-25"
         precomputed_pdb_path = "cycle1_alphafold2_output.pdb" # converts pdb_id to a Path Object;
@@ -76,12 +76,8 @@ if num_seq > 1: # if num_seq > 1, then run code below
         contigs="A100-300/0 15-25"
         target_sequence="GKIDFLNNYALFLSPSAQQASWQVSARFNQYKYNQNFSAGNNENIMEAHVGINGEANLDFLNIPLTIPEMRLPYTIITTPPLKDFSLWEKTGLKEFLKTTKQSFDLSVKAQYKKNKHRHSITNPLAVLCEFISQSIKSFDRHFEKNRNNALDFVTKSYNETKIKFDKYKAEKSHDELPRTFQIPGYTVPVVNVEVSPFTIEMSAFGYVFPKAVSMPSFSILGSDVRVPSYTLILPSLELPVLHVPRNLKLSLPDFKELCTISHIFIPAMGNITYDFSFKSSVITLNTNAELFNQSDIVAHLLSSSSSVIDALQYKLEGTTRLTRKRGLKLATALSLSNKFVEGSHNSTVSLTTKNMEVSVATTTKAQIPILRMNFKQELNGNTKSKPTVSSSMEFKYDFNSSMLYSTAKGAVDHKLSLESLTSYFSIESSTKGDVKGSVLSREYSGTIASEANTYLNSKSTRSSVKLQGTSKIDDIWNLEVKENFAGEATLQRIYSLWEHSTKNHLQLEGLFFTNGEHTSKATLELSPWQMSALVQVHASQPSSFHDFPDLGQEVALNANTKNQKIRWKNEVRIHSGSFQSQVELSNDQEKAHLDIAGSLEGHLRFLKNIILPVYDKSLWDFLKLDVTTSIGRRQHLRVSTAFVYTKNPNGYSFSIPVKVLADKFIIPGLKLNDLNSVLVMPTFHVPFTDLQVPSCKLDFREIQIYKKLRTSSFALNLPTLPEVKFPEVDVLTKYSQPEDSLIPFFEITVPESQLTVSQFTLPKSVSDGIAALDLNAVANKIADFELPTIIVPEQTIEIPSIKFSVPAGIVIPSFQALTARFEVDSPVYNATWSASLKNKADYVETVLDSTCSSTVQFLEYELNVLGTHKIEDGTLASKTKGTFAHRDFSAEYEEDGKYEGLQEWEGKAHLNIKSPAFTDLHLRYQKDKKGISTSAASPAVGTVGMDMDEDDDFSKWNFYYSPQSSPDKKLTIFKTELRVRESDEETQIKVNWEEEAASGLLTSLKDNVPKATGVLYDYVNKYHWEHTGLTLREVSSKLRRNLQNNAEWVYQGAIRQIDDIDVRFQKAASGTTGTYQEWKDKAQNLYQELLTQEGQASFQGLKDNVFDGLVRVTQEFHMKVKHLIDSLIDFLNFPRFQFPGKPGIYTREELCTMFIREVGTVLSQVYSKVHNGSEILFSYFQDLVITLPFELRKHKLIDV"
         precomputed_pdb_path = "cycle2_alphafold2_output.pdb" # 
-    else:
-        raise ValueError("Invalid cycle number. Please set cycle to 1 or 2.")
-    
-if num_seq == 1: # if num_seq > 1, then run code below
-    
-    if "1" in cycle:
+
+    elif "1" in cycle:
         target_sequence="MDPPRPALLALLALPALLLLLLAGARAEEEMLENVSLVCPKDATRFKHLRKYTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGIISALLVPPETEEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPLALIKGMTRPLSTLISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKINSRFFGEGTKKMGLAFESTKSTSPPKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLYALSHAVNNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTMEQLTPELKSSILKCVQSTKPSLMIQKAAIQALRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKSVSLPSLDPASAKIEGNLIFDPNNYLPKESMLKTTLTAFGFASADLIEIGLEGKGFEPTLEALFGKQGFFPDSVNKALYWVNGQVPDGVSKVLVDHFGYTKDDKHEQDMVNGIMLSVEKLIKDLKSKEVPEARAYLRILGEELGFASLHDLQLLGKLLLMGARTLQGIPQMIGEVIRKGSKNDFFLHYIFMENAFELPTGAGLQLQISSSGVIAPGAKAGVKLEVANMQAELVAKPSVSVEFVTNMGIIIPDFARSGVQMNTNFFHESGLEAHVALKAGKLKFIIPSPKRPVKLLSGGNTLHLVSTTKTEVIPPLIENRQSWSVCKQVFPGLNYCTSGAYSNASSTDSASYYPLTGDTRLELELRPTGEIEQYSVSATYELQREDRALVDTLKFVTQAEGAKQTEATMTFKYNRQSMTLSSEVQIPDFDVDLGTILRVNDESTEGKTSYRLTLDIQNKKITEVALMGHLSCDTKEERKIKGVISIPRLQAEARSEILAHWSPAKLLLQMDSSATAYGSTVSKRVAWHYDEEKIEFEWNTGTNVDTKKMTSNFPVDLSDYPKSLHMYANRLLDHRVPQTDMTFRHVGSKLIVAMSSWLQKASGSLPYTQTLQDHLNSLKEFNLQNMGLPDFHIPENLFLKSDGRVKYTLNKN",
         precomputed_pdb_path = "cycle1_alphafold2_output.pdb" # 
 
@@ -114,6 +110,16 @@ name = f"cycle{cycle}_{num_seq}seqs_{diffusion}diff_{temp}temp"
 outdir = f"{root}/cycle{cycle}_{diffusion}diff_{temp}temp"
 os.makedirs(outdir, exist_ok=True)
 print(f"Output dir : {outdir}")
+
+# check if this outdir exists
+if os.path.exists(outdir):
+    print(f"Output dir {outdir} already exists. Please check the path.")
+
+# list all files in outdir
+print("Current directory contents:")
+for file in os.listdir(outdir):
+    print(file)
+print()
 
 # Check if AlphaFold2 PDB exists
 if not os.path.exists(precomputed_pdb_path):
@@ -313,22 +319,23 @@ example=cycle
 
 ##############################################################
 # 4. AlphaFold2-Multimer
+# binder_target_pair contains two sequences: [binder_sequence, target_sequence]
 ##############################################################
 print()
 print(f"Loading AlphaFold-Multimer...")
 print()
 
 # Load binder_target_pairs from the JSON file
-binder_target_pairs_path = f"3_{name}_proteinmpnn_pairs.json"
-
-# binder_target_pairs_path = f"{outdir}/3_{name}_proteinmpnn_pairs.json"
+# os.chdir(outdir)
+binder_target_pairs_path = f"3_{name}_proteinmpnn_pairs.json" # 3_cycle1A_5seqs_25diff_0.1temp_proteinmpnn_pairs.json
 with open(binder_target_pairs_path, "r") as json_file:
     binder_target_pairs = json.load(json_file)
 print(binder_target_pairs[:2])  # Print the first 2 pairs for preview
 
-n_processed = 0
-multimer_response_codes = [0 for i in binder_target_pairs]
-multimer_results = [None for i in binder_target_pairs]
+# Intiate variables
+n_processed = 0 # Tracks how many binder-target pairs have been processed.
+multimer_response_codes = [0 for i in binder_target_pairs] # A list to store response codes (rc) from each query to the AlphaFold2-Multimer API. A value of 0 typically indicates success
+multimer_results = [None for i in binder_target_pairs] # A list to store the results from each pair
 
 # change this value to process more or fewer target-binder pairs.
 pairs_to_process = 1
@@ -358,7 +365,8 @@ print(multimer_results[result_idx][prediction_idx][0:160])
 print()
 
 # Save all AlphaFold-Multimer results to a .txt file
-with open(f"{outdir}/4_multimer_{name}.txt", "w") as results_file:
+os.chdir(outdir)# change directory to outdir
+with open(f"{outdir}/4_{name}_multimer.txt", "w") as results_file:
     for i, result in enumerate(multimer_results):
         results_file.write(f"Result {i+1}:\n")  # Add a header for each result
         if result is not None:  # Check if the result exists
@@ -370,9 +378,21 @@ with open(f"{outdir}/4_multimer_{name}.txt", "w") as results_file:
             results_file.write("No result available for this pair.\n")
         results_file.write("-" * 50 + "\n")  # Separator between results
 
+
+# Save PDB structures for each prediction
+for i, result in enumerate(multimer_results):
+    if result is not None:
+        for prediction_idx, prediction in enumerate(result):
+            pdb_file_path = f"{root}/4_multimer_{name}_result{i+1}_prediction{prediction_idx+1}.pdb"
+            with open(pdb_file_path, "w") as pdb_file:
+                pdb_file.write(prediction)  # Assuming prediction is in PDB format
+
 ####################################################################
 # PART 5: VALIDATION
 ####################################################################
+print()
+print(f"Loading validation analyses...")
+print()
 
 # Function to calculate average pLDDT over all residues 
 def calculate_average_pLDDT(pdb_string):
