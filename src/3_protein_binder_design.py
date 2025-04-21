@@ -1,7 +1,7 @@
 # # De Novo Protein Design Workflow using NIMs (skipped AlphaFold2 prediction step)
 #   modified to accept a precomputed AlphaFold2 PDB structure
 # Keona Pang
-# Apr 18, 2025
+# Apr 20, 2025
 
 # Hardware requirements: 4 x A100 CRUSOE instance
 #   4 x GPU, 47 GiB GPU memory
@@ -74,7 +74,7 @@ print(f"Generating {num_seq} sequences per target for cycle {cycle}...")
 
 if num_seq > 1: # if num_seq > 1, then run code below
     if cycle == "1":
-        contigs="A300-500/0 15-25" # contigs = "A400-700/15-25"???
+        contigs="A300-500/0 15-25" # contigs = "A400-700/15-25"
         precomputed_pdb_path = "cycle1_alphafold2_output.pdb" # converts pdb_id to a Path Object;
         target_sequence="MDPPRPALLALLALPALLLLLLAGARAEEEMLENVSLVCPKDATRFKHLRKYTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGIISALLVPPETEEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPLALIKGMTRPLSTLISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKINSRFFGEGTKKMGLAFESTKSTSPPKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLYALSHAVNNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTMEQLTPELKSSILKCVQSTKPSLMIQKAAIQALRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKSVSLPSLDPASAKIEGNLIFDPNNYLPKESMLKTTLTAFGFASADLIEIGLEGKGFEPTLEALFGKQGFFPDSVNKALYWVNGQVPDGVSKVLVDHFGYTKDDKHEQDMVNGIMLSVEKLIKDLKSKEVPEARAYLRILGEELGFASLHDLQLLGKLLLMGARTLQGIPQMIGEVIRKGSKNDFFLHYIFMENAFELPTGAGLQLQISSSGVIAPGAKAGVKLEVANMQAELVAKPSVSVEFVTNMGIIIPDFARSGVQMNTNFFHESGLEAHVALKAGKLKFIIPSPKRPVKLLSGGNTLHLVSTTKTEVIPPLIENRQSWSVCKQVFPGLNYCTSGAYSNASSTDSASYYPLTGDTRLELELRPTGEIEQYSVSATYELQREDRALVDTLKFVTQAEGAKQTEATMTFKYNRQSMTLSSEVQIPDFDVDLGTILRVNDESTEGKTSYRLTLDIQNKKITEVALMGHLSCDTKEERKIKGVISIPRLQAEARSEILAHWSPAKLLLQMDSSATAYGSTVSKRVAWHYDEEKIEFEWNTGTNVDTKKMTSNFPVDLSDYPKSLHMYANRLLDHRVPQTDMTFRHVGSKLIVAMSSWLQKASGSLPYTQTLQDHLNSLKEFNLQNMGLPDFHIPENLFLKSDGRVKYTLNKN"
     elif cycle == "2":
@@ -85,15 +85,24 @@ if num_seq > 1: # if num_seq > 1, then run code below
     elif "1" in cycle:
         target_sequence="MDPPRPALLALLALPALLLLLLAGARAEEEMLENVSLVCPKDATRFKHLRKYTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGIISALLVPPETEEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPLALIKGMTRPLSTLISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKINSRFFGEGTKKMGLAFESTKSTSPPKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLYALSHAVNNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTMEQLTPELKSSILKCVQSTKPSLMIQKAAIQALRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKSVSLPSLDPASAKIEGNLIFDPNNYLPKESMLKTTLTAFGFASADLIEIGLEGKGFEPTLEALFGKQGFFPDSVNKALYWVNGQVPDGVSKVLVDHFGYTKDDKHEQDMVNGIMLSVEKLIKDLKSKEVPEARAYLRILGEELGFASLHDLQLLGKLLLMGARTLQGIPQMIGEVIRKGSKNDFFLHYIFMENAFELPTGAGLQLQISSSGVIAPGAKAGVKLEVANMQAELVAKPSVSVEFVTNMGIIIPDFARSGVQMNTNFFHESGLEAHVALKAGKLKFIIPSPKRPVKLLSGGNTLHLVSTTKTEVIPPLIENRQSWSVCKQVFPGLNYCTSGAYSNASSTDSASYYPLTGDTRLELELRPTGEIEQYSVSATYELQREDRALVDTLKFVTQAEGAKQTEATMTFKYNRQSMTLSSEVQIPDFDVDLGTILRVNDESTEGKTSYRLTLDIQNKKITEVALMGHLSCDTKEERKIKGVISIPRLQAEARSEILAHWSPAKLLLQMDSSATAYGSTVSKRVAWHYDEEKIEFEWNTGTNVDTKKMTSNFPVDLSDYPKSLHMYANRLLDHRVPQTDMTFRHVGSKLIVAMSSWLQKASGSLPYTQTLQDHLNSLKEFNLQNMGLPDFHIPENLFLKSDGRVKYTLNKN",
         precomputed_pdb_path = "cycle1_alphafold2_output.pdb" # 
-        
-        if cycle == "1A": 
-            contigs="A400-430/0 15-25"
+         
+        if cycle == "1A": # april 21
+            contigs="A200-230/0 15-25" 
         if cycle == "1B":
-            contigs="A450-480/0 15-25"
+            contigs="A250-280/0 15-25"
         if cycle == "1C":
-            contigs="A500-540/0 15-25"
+            contigs="A300-340/0 15-25"
         if cycle == "1D":
-            contigs="A550-600/0 15-25"
+            contigs="A350-400/0 15-25"
+           
+        # if cycle == "1A": # April 10
+        #     contigs="A400-430/0 15-25" 
+        # if cycle == "1B":
+        #     contigs="A450-480/0 15-25"
+        # if cycle == "1C":
+        #     contigs="A500-540/0 15-25"
+        # if cycle == "1D":
+        #     contigs="A550-600/0 15-25"
     
     elif "2" in cycle:
         target_sequence="GKIDFLNNYALFLSPSAQQASWQVSARFNQYKYNQNFSAGNNENIMEAHVGINGEANLDFLNIPLTIPEMRLPYTIITTPPLKDFSLWEKTGLKEFLKTTKQSFDLSVKAQYKKNKHRHSITNPLAVLCEFISQSIKSFDRHFEKNRNNALDFVTKSYNETKIKFDKYKAEKSHDELPRTFQIPGYTVPVVNVEVSPFTIEMSAFGYVFPKAVSMPSFSILGSDVRVPSYTLILPSLELPVLHVPRNLKLSLPDFKELCTISHIFIPAMGNITYDFSFKSSVITLNTNAELFNQSDIVAHLLSSSSSVIDALQYKLEGTTRLTRKRGLKLATALSLSNKFVEGSHNSTVSLTTKNMEVSVATTTKAQIPILRMNFKQELNGNTKSKPTVSSSMEFKYDFNSSMLYSTAKGAVDHKLSLESLTSYFSIESSTKGDVKGSVLSREYSGTIASEANTYLNSKSTRSSVKLQGTSKIDDIWNLEVKENFAGEATLQRIYSLWEHSTKNHLQLEGLFFTNGEHTSKATLELSPWQMSALVQVHASQPSSFHDFPDLGQEVALNANTKNQKIRWKNEVRIHSGSFQSQVELSNDQEKAHLDIAGSLEGHLRFLKNIILPVYDKSLWDFLKLDVTTSIGRRQHLRVSTAFVYTKNPNGYSFSIPVKVLADKFIIPGLKLNDLNSVLVMPTFHVPFTDLQVPSCKLDFREIQIYKKLRTSSFALNLPTLPEVKFPEVDVLTKYSQPEDSLIPFFEITVPESQLTVSQFTLPKSVSDGIAALDLNAVANKIADFELPTIIVPEQTIEIPSIKFSVPAGIVIPSFQALTARFEVDSPVYNATWSASLKNKADYVETVLDSTCSSTVQFLEYELNVLGTHKIEDGTLASKTKGTFAHRDFSAEYEEDGKYEGLQEWEGKAHLNIKSPAFTDLHLRYQKDKKGISTSAASPAVGTVGMDMDEDDDFSKWNFYYSPQSSPDKKLTIFKTELRVRESDEETQIKVNWEEEAASGLLTSLKDNVPKATGVLYDYVNKYHWEHTGLTLREVSSKLRRNLQNNAEWVYQGAIRQIDDIDVRFQKAASGTTGTYQEWKDKAQNLYQELLTQEGQASFQGLKDNVFDGLVRVTQEFHMKVKHLIDSLIDFLNFPRFQFPGKPGIYTREELCTMFIREVGTVLSQVYSKVHNGSEILFSYFQDLVITLPFELRKHKLIDV",
@@ -246,81 +255,81 @@ cycle = ExampleRequestParams(
 )
 example=cycle
 
-##############################################################
-# 2. RFdiffusion
-##############################################################
-precomputed_pdb=get_reduced_pdb(precomputed_pdb_path, rcsb_path=None)
+# ##############################################################
+# # 2. RFdiffusion
+# ##############################################################
+# precomputed_pdb=get_reduced_pdb(precomputed_pdb_path, rcsb_path=None)
 
-print(f"Running RFdiffusion....")
-rfdiffusion_query = {
-    "input_pdb": precomputed_pdb,  # Now using the precomputed PDB structure
-    "contigs": example.contigs,
-    "diffusion_steps": example.diffusion_steps
-    # "hotspot_res": example.hotspot_res
-}
-rc, rfdiffusion_response = query_nim(
-    payload=rfdiffusion_query,
-    nim_endpoint=NIM_ENDPOINTS.RFDIFFUSION.value,
-    nim_port=NIM_PORTS.RFDIFFUSION_PORT.value
-)
+# print(f"Running RFdiffusion....")
+# rfdiffusion_query = {
+#     "input_pdb": precomputed_pdb,  # Now using the precomputed PDB structure
+#     "contigs": example.contigs,
+#     "diffusion_steps": example.diffusion_steps
+#     # "hotspot_res": example.hotspot_res
+# }
+# rc, rfdiffusion_response = query_nim(
+#     payload=rfdiffusion_query,
+#     nim_endpoint=NIM_ENDPOINTS.RFDIFFUSION.value,
+#     nim_port=NIM_PORTS.RFDIFFUSION_PORT.value
+# )
 
-# save
-print(rfdiffusion_response["output_pdb"][0:160])
-with open(f"{outdir}/2_{name}_rfdiffusion.pdb", "w") as pdb_file:
-    pdb_file.write(rfdiffusion_response["output_pdb"])
+# # save
+# print(rfdiffusion_response["output_pdb"][0:160])
+# with open(f"{outdir}/2_{name}_rfdiffusion.pdb", "w") as pdb_file:
+#     pdb_file.write(rfdiffusion_response["output_pdb"])
 
-##############################################################
-# 3. ProteinMPNN
-##############################################################
-print()
-print(f"Running ProteinMPNN....")
-proteinmpnn_query = {
-    "input_pdb" : rfdiffusion_response["output_pdb"],
-    "input_pdb_chains" : example.input_pdb_chains,
-    "ca_only" : example.ca_only,
-    "use_soluble_model" : example.use_soluble_model,
-    "num_seq_per_target" : example.num_seq_per_target,
-    "sampling_temp" : example.sampling_temp
-}
-rc, proteinmpnn_response = query_nim(
-    payload=proteinmpnn_query,
-    nim_endpoint=NIM_ENDPOINTS.PROTEINMPNN.value,
-    nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
-)
+# ##############################################################
+# # 3. ProteinMPNN
+# ##############################################################
+# print()
+# print(f"Running ProteinMPNN....")
+# proteinmpnn_query = {
+#     "input_pdb" : rfdiffusion_response["output_pdb"],
+#     "input_pdb_chains" : example.input_pdb_chains,
+#     "ca_only" : example.ca_only,
+#     "use_soluble_model" : example.use_soluble_model,
+#     "num_seq_per_target" : example.num_seq_per_target,
+#     "sampling_temp" : example.sampling_temp
+# }
+# rc, proteinmpnn_response = query_nim(
+#     payload=proteinmpnn_query,
+#     nim_endpoint=NIM_ENDPOINTS.PROTEINMPNN.value,
+#     nim_port=NIM_PORTS.PROTEINMPNN_PORT.value
+# )
 
-# binder sequences are stored in fasta_sequences
-fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
-binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
+# # binder sequences are stored in fasta_sequences
+# fasta_sequences = [x.strip() for x in proteinmpnn_response["mfasta"].split("\n") if '>' not in x][2:]
+# binder_target_pairs = [[binder, example.target_sequence] for binder in fasta_sequences]
 
-# Save binder_target_pairs to a .txt file
-with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
-    for i, pair in enumerate(binder_target_pairs):
-        binder, target = pair
-        txt_file.write(f"Binder {i+1}: {binder}\n")
-        txt_file.write(f"Target {i+1}: {target}\n")
-        txt_file.write("\n")  # Add a blank line between pairs for readability
+# # Save binder_target_pairs to a .txt file
+# with open(f"{outdir}/3_{name}_proteinmpnn.txt", "w") as txt_file:
+#     for i, pair in enumerate(binder_target_pairs):
+#         binder, target = pair
+#         txt_file.write(f"Binder {i+1}: {binder}\n")
+#         txt_file.write(f"Target {i+1}: {target}\n")
+#         txt_file.write("\n")  # Add a blank line between pairs for readability
 
-with open(f"{outdir}/3_{name}_proteinmpnn_pairs.json", "w") as json_file:
-    json.dump(binder_target_pairs, json_file, indent=4)
+# with open(f"{outdir}/3_{name}_proteinmpnn_pairs.json", "w") as json_file:
+#     json.dump(binder_target_pairs, json_file, indent=4)
 
-# Save proteinmpnn_response["mfasta"] to a .fasta file
-with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
-    fasta_file.write(proteinmpnn_response["mfasta"])
+# # Save proteinmpnn_response["mfasta"] to a .fasta file
+# with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
+#     fasta_file.write(proteinmpnn_response["mfasta"])
 
 
-# Save scores and probs to files
-scores = proteinmpnn_response["scores"]
-with open(f"{outdir}/3_{name}_proteinmpnn_scores.txt", "w") as scores_file:
-    for i, score in enumerate(scores):
-        scores_file.write(f"Sequence {i+1}: Score = {score}\n")
+# # Save scores and probs to files
+# scores = proteinmpnn_response["scores"]
+# with open(f"{outdir}/3_{name}_proteinmpnn_scores.txt", "w") as scores_file:
+#     for i, score in enumerate(scores):
+#         scores_file.write(f"Sequence {i+1}: Score = {score}\n")
 
-probs = proteinmpnn_response["probs"]
-with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
-    for i, prob_matrix in enumerate(probs):
-        probs_file.write(f"Sequence {i+1}:\n")
-        for position_probs in prob_matrix:
-            probs_file.write(",".join(map(str, position_probs)) + "\n")
-        probs_file.write("\n")
+# probs = proteinmpnn_response["probs"]
+# with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
+#     for i, prob_matrix in enumerate(probs):
+#         probs_file.write(f"Sequence {i+1}:\n")
+#         for position_probs in prob_matrix:
+#             probs_file.write(",".join(map(str, position_probs)) + "\n")
+#         probs_file.write("\n")
 
 ##############################################################
 # 4. AlphaFold2-Multimer
@@ -329,151 +338,151 @@ with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
 # AlphaFold2-Multimer should attempt to predict the structure of the entire complex, 
 # # including all 5 components (target + 4 peptides).
 ##############################################################
-# print()
-# print(f"Loading AlphaFold-Multimer...")
-# print()
+print()
+print(f"Loading AlphaFold-Multimer...")
+print()
 
-# # Load binder_target_pairs from the JSON file
-# # os.chdir(outdir)
-# binder_target_pairs_path = f"3_{name}_proteinmpnn_pairs.json" # 3_cycle1A_5seqs_25diff_0.1temp_proteinmpnn_pairs.json
-# with open(binder_target_pairs_path, "r") as json_file:
-#     binder_target_pairs = json.load(json_file)
-# print(binder_target_pairs[:2])  # Print the first 2 pairs for preview
+# Load binder_target_pairs from the JSON file
+# os.chdir(outdir)
+binder_target_pairs_path = f"3_{name}_proteinmpnn_pairs.json" # 3_cycle1A_5seqs_25diff_0.1temp_proteinmpnn_pairs.json
+with open(binder_target_pairs_path, "r") as json_file:
+    binder_target_pairs = json.load(json_file)
+print(binder_target_pairs[:2])  # Print the first 2 pairs for preview
 
-# # Intiate variables
-# n_processed = 0 # Tracks how many binder-target pairs have been processed.
-# multimer_response_codes = [0 for i in binder_target_pairs] # A list to store response codes (rc) from each query to the AlphaFold2-Multimer API. A value of 0 typically indicates success
-# multimer_results = [None for i in binder_target_pairs] # A list to store the results from each pair
+# Intiate variables
+n_processed = 0 # Tracks how many binder-target pairs have been processed.
+multimer_response_codes = [0 for i in binder_target_pairs] # A list to store response codes (rc) from each query to the AlphaFold2-Multimer API. A value of 0 typically indicates success
+multimer_results = [None for i in binder_target_pairs] # A list to store the results from each pair
 
-# # change this value to process more or fewer target-binder pairs.
-# pairs_to_process = 1
+# change this value to process more or fewer target-binder pairs.
+pairs_to_process = 1
 
-# for binder_target_pair in binder_target_pairs:
-#     multimer_query = {
-#         "sequences" : binder_target_pair,
-#         "selected_models" : [1]
-#     }
-#     print(f"Processing pair number {n_processed+1} of {len(binder_target_pairs)}")
-#     rc, multimer_response = query_nim(
-#         payload=multimer_query,
-#         nim_endpoint=NIM_ENDPOINTS.AF2_MULTIMER.value,
-#         nim_port=NIM_PORTS.AF2_MULTIMER_PORT.value
-#     )
-#     multimer_response_codes[n_processed] = rc
-#     multimer_results[n_processed] = multimer_response
-#     print(f"Finished binder-target pair number {n_processed+1} of {len(binder_target_pairs)}")
-#     n_processed += 1
-#     if n_processed >= pairs_to_process:
-#         break
+for binder_target_pair in binder_target_pairs:
+    multimer_query = {
+        "sequences" : binder_target_pair,
+        "selected_models" : [1]
+    }
+    print(f"Processing pair number {n_processed+1} of {len(binder_target_pairs)}")
+    rc, multimer_response = query_nim(
+        payload=multimer_query,
+        nim_endpoint=NIM_ENDPOINTS.AF2_MULTIMER.value,
+        nim_port=NIM_PORTS.AF2_MULTIMER_PORT.value
+    )
+    multimer_response_codes[n_processed] = rc
+    multimer_results[n_processed] = multimer_response
+    print(f"Finished binder-target pair number {n_processed+1} of {len(binder_target_pairs)}")
+    n_processed += 1
+    if n_processed >= pairs_to_process:
+        break
 
-# ## Print just the first 160 characters of the first multimer response
-# result_idx = 0
-# prediction_idx = 0
-# print(multimer_results[result_idx][prediction_idx][0:160])
-# print()
+## Print just the first 160 characters of the first multimer response
+result_idx = 0
+prediction_idx = 0
+print(multimer_results[result_idx][prediction_idx][0:160])
+print()
 
-# # Save all AlphaFold-Multimer results to a .txt file
-# os.chdir(outdir)# change directory to outdir
-# with open(f"{outdir}/4_{name}_multimer.txt", "w") as results_file:
-#     for i, result in enumerate(multimer_results):
-#         results_file.write(f"Result {i+1}:\n")  # Add a header for each result
-#         if result is not None:  # Check if the result exists
-#             for prediction_idx, prediction in enumerate(result):
-#                 results_file.write(f"Prediction {prediction_idx+1}:\n")
-#                 results_file.write(prediction)
-#                 results_file.write("\n\n")  # Add spacing between predictions
-#         else:
-#             results_file.write("No result available for this pair.\n")
-#         results_file.write("-" * 50 + "\n")  # Separator between results
+# Save all AlphaFold-Multimer results to a .txt file
+os.chdir(outdir)# change directory to outdir
+with open(f"{outdir}/4_{name}_multimer.txt", "w") as results_file:
+    for i, result in enumerate(multimer_results):
+        results_file.write(f"Result {i+1}:\n")  # Add a header for each result
+        if result is not None:  # Check if the result exists
+            for prediction_idx, prediction in enumerate(result):
+                results_file.write(f"Prediction {prediction_idx+1}:\n")
+                results_file.write(prediction)
+                results_file.write("\n\n")  # Add spacing between predictions
+        else:
+            results_file.write("No result available for this pair.\n")
+        results_file.write("-" * 50 + "\n")  # Separator between results
 
 
-# # Save PDB structures for each prediction
-# for i, result in enumerate(multimer_results):
-#     if result is not None:
-#         for prediction_idx, prediction in enumerate(result):
-#             pdb_file_path = f"{root}/4_{name}_{i+1}_prediction{prediction_idx+1}.pdb"
-#             with open(pdb_file_path, "w") as pdb_file:
-#                 pdb_file.write(prediction)  # Assuming prediction is in PDB format
+# Save PDB structures for each prediction
+for i, result in enumerate(multimer_results):
+    if result is not None:
+        for prediction_idx, prediction in enumerate(result):
+            pdb_file_path = f"{root}/4_{name}_{i+1}_prediction{prediction_idx+1}.pdb"
+            with open(pdb_file_path, "w") as pdb_file:
+                pdb_file.write(prediction)  # Assuming prediction is in PDB format
 
-# ####################################################################
-# # PART 5: VALIDATION
-# ####################################################################
-# print()
-# print(f"Loading validation analyses...")
-# print()
+####################################################################
+# PART 5: VALIDATION
+####################################################################
+print()
+print(f"Loading validation analyses...")
+print()
 
-# # Function to calculate average pLDDT over all residues 
-# def calculate_average_pLDDT(pdb_string):
-#     total_pLDDT = 0.0
-#     atom_count = 0
-#     pdb_lines = pdb_string.splitlines()
-#     for line in pdb_lines:
-#         # PDB atom records start with "ATOM"
-#         if line.startswith("ATOM"):
-#             atom_name = line[12:16].strip() # Extract atom name
-#             if atom_name == "CA":  # Only consider atoms with name "CA"
-#                 try:
-#                     # Extract the B-factor value from columns 61-66 (following PDB format specifications)
-#                     pLDDT = float(line[60:66].strip())
-#                     total_pLDDT += pLDDT
-#                     atom_count += 1
-#                 except ValueError:
-#                     pass  # Skip lines where B-factor can't be parsed as a float
+# Function to calculate average pLDDT over all residues 
+def calculate_average_pLDDT(pdb_string):
+    total_pLDDT = 0.0
+    atom_count = 0
+    pdb_lines = pdb_string.splitlines()
+    for line in pdb_lines:
+        # PDB atom records start with "ATOM"
+        if line.startswith("ATOM"):
+            atom_name = line[12:16].strip() # Extract atom name
+            if atom_name == "CA":  # Only consider atoms with name "CA"
+                try:
+                    # Extract the B-factor value from columns 61-66 (following PDB format specifications)
+                    pLDDT = float(line[60:66].strip())
+                    total_pLDDT += pLDDT
+                    atom_count += 1
+                except ValueError:
+                    pass  # Skip lines where B-factor can't be parsed as a float
 
-#     if atom_count == 0:
-#         return 0.0  # Return 0 if no N atoms were found
+    if atom_count == 0:
+        return 0.0  # Return 0 if no N atoms were found
 
-#     average_pLDDT = total_pLDDT / atom_count
-#     return average_pLDDT
+    average_pLDDT = total_pLDDT / atom_count
+    return average_pLDDT
 
-# # Run 
-# plddts = []
-# for idx in range(0, len(multimer_results)):
-#     if multimer_results[idx] is not None:
-#         plddts.append(calculate_average_pLDDT(multimer_results[idx][0]))
+# Run 
+plddts = []
+for idx in range(0, len(multimer_results)):
+    if multimer_results[idx] is not None:
+        plddts.append(calculate_average_pLDDT(multimer_results[idx][0]))
 
-# ## Combine the results with their pLDDTs
-# binder_target_results = list(zip(binder_target_pairs, multimer_results, plddts))
+## Combine the results with their pLDDTs
+binder_target_results = list(zip(binder_target_pairs, multimer_results, plddts))
 
-# ## Sort the results by plddt
-# sorted_binder_target_results = sorted(binder_target_results, key=lambda x : x[2])
+## Sort the results by plddt
+sorted_binder_target_results = sorted(binder_target_results, key=lambda x : x[2])
 
-# ## print the top 5 results
-# for i in range(0, len(sorted_binder_target_results)):
-#     print("-"*80)
-#     print(f"rank: {i}")
-#     print(f"binder: {sorted_binder_target_results[i][0][0]}")
-#     print(f"target: {sorted_binder_target_results[i][0][1]}")
-#     print(f"pLDDT: {sorted_binder_target_results[i][2]}")
-#     print("-"*80)
+## print the top 5 results
+for i in range(0, len(sorted_binder_target_results)):
+    print("-"*80)
+    print(f"rank: {i}")
+    print(f"binder: {sorted_binder_target_results[i][0][0]}")
+    print(f"target: {sorted_binder_target_results[i][0][1]}")
+    print(f"pLDDT: {sorted_binder_target_results[i][2]}")
+    print("-"*80)
 
-# # Save all results to a .txt file
-# with open(f"{outdir}/5_{name}_assess.txt", "w") as results_file:
-#     # Section 1: Average pLDDT values
-#     results_file.write("### Average pLDDT Values ###\n")
-#     for idx, plddt in enumerate(plddts):
-#         results_file.write(f"Result {idx + 1}: Average pLDDT = {plddt:.2f}\n")
-#     results_file.write("\n\n")
+# Save all results to a .txt file
+with open(f"{outdir}/5_{name}_assess.txt", "w") as results_file:
+    # Section 1: Average pLDDT values
+    results_file.write("### Average pLDDT Values ###\n")
+    for idx, plddt in enumerate(plddts):
+        results_file.write(f"Result {idx + 1}: Average pLDDT = {plddt:.2f}\n")
+    results_file.write("\n\n")
 
-#     # Section 2: Binder-Target Results with Raw Data
-#     results_file.write("### Binder-Target Results (Raw Data) ###\n")
-#     for idx, (pair, result, plddt) in enumerate(binder_target_results):
-#         results_file.write(f"Result {idx + 1}:\n")
-#         results_file.write(f"Binder: {pair[0]}\n")
-#         results_file.write(f"Target: {pair[1]}\n")
-#         results_file.write(f"Average pLDDT: {plddt:.2f}\n")
-#         results_file.write(f"Raw Multimer Result: {result}\n")
-#         results_file.write("-" * 80 + "\n")
-#     results_file.write("\n\n")
+    # Section 2: Binder-Target Results with Raw Data
+    results_file.write("### Binder-Target Results (Raw Data) ###\n")
+    for idx, (pair, result, plddt) in enumerate(binder_target_results):
+        results_file.write(f"Result {idx + 1}:\n")
+        results_file.write(f"Binder: {pair[0]}\n")
+        results_file.write(f"Target: {pair[1]}\n")
+        results_file.write(f"Average pLDDT: {plddt:.2f}\n")
+        results_file.write(f"Raw Multimer Result: {result}\n")
+        results_file.write("-" * 80 + "\n")
+    results_file.write("\n\n")
 
-#     # Section 3: Sorted Binder-Target Results by pLDDT
-#     results_file.write("### Sorted Binder-Target Results by pLDDT ###\n")
-#     for rank, (pair, result, plddt) in enumerate(sorted_binder_target_results):
-#         results_file.write(f"Rank {rank + 1}:\n")
-#         results_file.write(f"Binder: {pair[0]}\n")
-#         results_file.write(f"Target: {pair[1]}\n")
-#         results_file.write(f"Average pLDDT: {plddt:.2f}\n")
-#         results_file.write("-" * 80 + "\n")
+    # Section 3: Sorted Binder-Target Results by pLDDT
+    results_file.write("### Sorted Binder-Target Results by pLDDT ###\n")
+    for rank, (pair, result, plddt) in enumerate(sorted_binder_target_results):
+        results_file.write(f"Rank {rank + 1}:\n")
+        results_file.write(f"Binder: {pair[0]}\n")
+        results_file.write(f"Target: {pair[1]}\n")
+        results_file.write(f"Average pLDDT: {plddt:.2f}\n")
+        results_file.write("-" * 80 + "\n")
 
-# print(f"------------------------------------------------")
-# print()
+print(f"------------------------------------------------")
+print()
