@@ -47,17 +47,18 @@ for cycle in "1" "2"; do
     python3.11 1_protein_binder_design.py --cycle "$cycle" --num_seq 5 --diffusion 25 --temp 0.4
 done
 
-for cycle in "1A" "1B" "1C" "1D" "2A" "2B" "2C" "2D"; do
-    python3.11 1_protein_binder_design.py --cycle "$cycle" --num_seq 5 --diffusion 25 --temp 0.25
+for cycle in "1A" "1B" "1C" "1D"; do #  "2A" "2B" "2C" "2D"
+    python3.11 2_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 25 --temp 0.3
 done
 
 # ----------------------------------------------------
 for cycle in "1A" "1B" "1C" "1D"; do
-    python3.11 2_protein_binder_design.py --cycle "$cycle" --num_seq 5 --diffusion 25 --temp 0.25
+    python3.11 2_protein_binder_design.py --cycle "$cycle" --num_seq 2 --diffusion 25 --temp 0.3
 done
-python3.11 2_protein_binder_design.py --cycle "1" --num_seq 5 --diffusion 25 --temp 0.2
-python3.11 2_protein_binder_design.py --cycle "2" --num_seq 5 --diffusion 25 --temp 0.1
-python3.11 2_protein_binder_design.py --cycle "2" --num_seq 5 --diffusion 25 --temp 0.2
+
+python3.11 2_protein_binder_design.py --cycle "1" --num_seq 2 --diffusion 25 --temp 0.2
+python3.11 2_protein_binder_design.py --cycle "2" --num_seq 2 --diffusion 25 --temp 0.1
+python3.11 2_protein_binder_design.py --cycle "2" --num_seq 2 --diffusion 25 --temp 0.2
 
 # ----------------------------------------------------
 
@@ -65,5 +66,11 @@ python3.11 -m pip install biopython
 python3.11 -m pip install prodigy-prot
 
 
-prodigy <directory_with_molecules>
-prodigy <structure_file>
+# ----------------------------------------------------
+# Convert JSON to PDB
+# ----------------------------------------------------
+
+json="/mnt/nfs/rigenenfs/shared_resources/biobanks/UKBIOBANK/pangk/EVO2/OUTPUT_RF/2_cycle1A_A400_440.json"
+Rscript "/mnt/nfs/rigenenfs/shared_resources/biobanks/UKBIOBANK/pangk/Keona_scripts/generative-protein-binder-design/src/convert_json_to_pdb.r" $json
+
+
