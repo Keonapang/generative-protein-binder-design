@@ -1,5 +1,5 @@
 # Keona Pang
-# Apr 18, 2025
+# Apr 24, 2025
 
 # Hardware requirements: 4 x A100 CRUSOE instance
 # 4 x GPU, 47 GiB GPU memory
@@ -33,30 +33,25 @@ docker compose
 # check status of NIMs
 curl localhost:8082/v1/health/ready # RFdiffusion
 curl localhost:8083/v1/health/ready # Protein MPNN
-curl localhost:8084/v1/health/ready # Protein MPNN
 
 pip install requests
 
-# EXECUTION
-cycle = 1 # cycle 1 or cycle 2
-num_seq = 4 # number of sequences to generate per target
-diffusion = 30 # number of diffusion steps (15-30 recommended)
-temp = 0.2 # sampling temperature (range: 0-1) to adjust the probability values for the 20 amino acids at each position, controls the diversity of the design outcomes
-
 # ----------------------------------------------------
-for cycle in "1A" "1B" "1C" "1D"; do #  "2A" "2B" "2C" "2D"
-    python3.11 2_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 25 --temp 0.3
+for cycle in "1A" "1B" "1C" "1D" "2A" "2B" "2C" "2D"; do
+    python3.11 /home/ubuntu/2_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 30 --temp 0.4
 done
 
 # ----------------------------------------------------
 for cycle in "1A" "1B" "1C" "1D" "2A" "2B" "2C" "2D"; do
-    python3.11 /home/ubuntu/2_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 30 --temp 0.35
+    python3.11 /home/ubuntu/2_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 30 --temp 0.4
 done
 # ----------------------------------------------------
 
-cycle="1" #  cycle="2"
+for cycle in "1" "2"; do
+    python3.11 /home/ubuntu/3_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 50 --temp 0.4
+done
+
 # python3.11 3_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 25 --temp 0.4
-python /home/ubuntu/3_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 50 --temp 0.5
 # python3.11 3_protein_binder_design.py --cycle "$cycle" --num_seq 5 --diffusion 25 --temp 0.4
 
 python 3_protein_binder_design.py --cycle "1" --num_seq 4 --diffusion 50 --temp 0.5
@@ -115,7 +110,6 @@ export NIM_PARALLEL_MSA_RUNNERS=3
 #################################################################################################
 # Initiate instance
 # April 22, 2025
-
 #################################################################################################
 
 # 0. Download the NGC CLI Tool 
@@ -139,6 +133,7 @@ docker run -it --rm --name alphafold2-multimer --runtime=nvidia \
     -p 8000:8000 \
     nvcr.io/nim/deepmind/alphafold2-multimer:2.1
 
+# the container will automatically utilize the GPUs
 export LOCAL_NIM_CACHE=~/.cache/nim
 docker run -it --rm --name alphafold2-multimer --runtime=nvidia \
     -e CUDA_VISIBLE_DEVICES=0,1 \
@@ -151,23 +146,22 @@ docker run -it --rm --name alphafold2-multimer --runtime=nvidia \
     -p 8080:8000 \
     nvcr.io/nim/deepmind/alphafold2-multimer:2.1
 
-# 3. In a new terminal, check docker container status
+# 3A. In a new terminal, check docker container status
 curl -X 'GET' \
     'http://localhost:8000/v1/health/ready' \
     -H 'accept: application/json'
+curl localhost:8000/v1/health/ready # alphafold2-multimer
 docker ps
 nvidia-smi --query-gpu=index,name,utilization.gpu,utilization.memory,memory.used,memory.total,temperature.gpu --format=csv
 
+# 3B. To confirm that the container has access to the GPUs, you can run nvidia-smi inside the container
+docker exec -it fdc43a13a9fd nvidia-smi
+
+
 # 4. Run inference to get a predicted protein structure for an amino acid sequence using the following command.
 
-curl -X 'POST' \
-    'http://localhost:8000/protein-structure/alphafold2/multimer/predict-structure-from-sequences' \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{"sequences": ["MNVIDIAIAMAI", "IAMNVIDIAAI"]}' > output.json
-
 # Cycle 1A
-cycle="1"
+cycle="1A"
 diff=50
 temp=0.5
 
@@ -205,78 +199,3 @@ curl -X 'POST' \
     -H 'Content-Type: application/json' \
     -d '{"sequences": ["PLQAAQEQEQIATQIAQQQA", "MDPPRPALLALLALPALLLLLLAGARAEEEMLENVSLVCPKDATRFKHLRKYTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGIISALLVPPETEEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPLALIKGMTRPLSTLISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKINSRFFGEGTKKMGLAFESTKSTSPPKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLYALSHAVNNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTMEQLTPELKSSILKCVQSTKPSLMIQKAAIQALRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKSVSLPSLDPASAKIEGNLIFDPNNYLPKESMLKTTLTAFGFASADLIEIGLEGKGFEPTLEALFGKQGFFPDSVNKALYWVNGQVPDGVSKVLVDHFGYTKDDKHEQDMVNGIMLSVEKLIKDLKSKEVPEARAYLRILGEELGFASLHDLQLLGKLLLMGARTLQGIPQMIGEVIRKGSKNDFFLHYIFMENAFELPTGAGLQLQISSSGVIAPGAKAGVKLEVANMQAELVAKPSVSVEFVTNMGIIIPDFARSGVQMNTNFFHESGLEAHVALKAGKLKFIIPSPKRPVKLLSGGNTLHLVSTTKTEVIPPLIENRQSWSVCKQVFPGLNYCTSGAYSNASSTDSASYYPLTGDTRLELELRPTGEIEQYSVSATYELQREDRALVDTLKFVTQAEGAKQTEATMTFKYNRQSMTLSSEVQIPDFDVDLGTILRVNDESTEGKTSYRLTLDIQNKKITEVALMGHLSCDTKEERKIKGVISIPRLQAEARSEILAHWSPAKLLLQMDSSATAYGSTVSKRVAWHYDEEKIEFEWNTGTNVDTKKMTSNFPVDLSDYPKSLHMYANRLLDHRVPQTDMTFRHVGSKLIVAMSSWLQKASGSLPYTQTLQDHLNSLKEFNLQNMGLPDFHIPENLFLKSDGRVKYTLNKN"], \
         "databases": ["uniref90", "mgnify", "small_bfd"]}' > 4_cycle1D_${diff}diff_${temp}temp.json
-
-
-import requests
-import json
-import os
-
-# Define the AlphaFold2-Multimer endpoint
-url = "http://localhost:8000/protein-structure/alphafold2/multimer/predict-structure-from-sequences"
-
-# Define binder-target pairs
-binder_target_pairs = [
-    ["MSDJDJSBSDMAI", "IAMNVIDIAAI"],  # Binder 1 and target
-    ["DGFHJKLAI", "IAMNVIDIAAI"],      # Binder 2 and target
-    ["HJGKLNBMNVBM", "IAMNVIDIAAI"]    # Binder 3 and target
-]
-
-# Headers for the API request
-headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json"
-}
-
-# Create output directory for PDB files
-output_dir = "pdb_outputs"
-os.makedirs(output_dir, exist_ok=True)
-
-# Variables for tracking results
-multimer_results = []  # Stores PDB strings
-multimer_response_codes = []  # Stores response codes (e.g., 200 for success)
-
-# Iterate over binder-target pairs
-for idx, binder_target_pair in enumerate(binder_target_pairs):
-    print(f"Processing pair {idx + 1} of {len(binder_target_pairs)}: {binder_target_pair}")
-    
-    # Prepare the API payload
-    data = {
-        "sequences": binder_target_pair,
-        "databases": ["uniref90", "mgnify", "small_bfd"]
-    }
-    
-    # Make the POST request
-    response = requests.post(url, headers=headers, data=json.dumps(data))
-    
-    # Check the response
-    if response.ok:
-        print(f"Request succeeded for pair {idx + 1}")
-        multimer_response_codes.append(response.status_code)
-        
-        # Save the PDB result to a file
-        pdb_string = response.text
-        pdb_filename = os.path.join(output_dir, f"structure_pair_{idx + 1}.pdb")
-        with open(pdb_filename, "w") as pdb_file:
-            pdb_file.write(pdb_string)
-        
-        # Append the result to multimer_results
-        multimer_results.append(pdb_string)
-    else:
-        print(f"Request failed for pair {idx + 1}: {response.status_code}, {response.text}")
-        multimer_response_codes.append(response.status_code)
-        multimer_results.append(None)
-
-# Print summary
-print(f"\nProcessed {len(binder_target_pairs)} binder-target pairs.")
-print(f"Response codes: {multimer_response_codes}")
-
-# Save the results to a JSON file for later use
-results_file = os.path.join(output_dir, "multimer_results.json")
-with open(results_file, "w") as json_file:
-    json.dump({
-        "binder_target_pairs": binder_target_pairs,
-        "multimer_results": multimer_results,
-        "response_codes": multimer_response_codes
-    }, json_file)
-
-print(f"Results saved to {results_file}")

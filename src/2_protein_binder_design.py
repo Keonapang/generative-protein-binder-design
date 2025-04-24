@@ -419,6 +419,12 @@ with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
 # print(f"Loading validation analyses...")
 # print()
 
+# multimer_path = f"4_multimer.json" # 3_cycle1A_5seqs_25diff_0.1temp_proteinmpnn_pairs.json
+# with open(multimer_path, "r") as json_file:
+#     multimer_results = json.load(json_file)
+# print(multimer_results[:2])  # Print the first 2 pairs for preview
+
+
 # # Function to calculate average pLDDT over all residues 
 # def calculate_average_pLDDT(pdb_string):
 #     total_pLDDT = 0.0

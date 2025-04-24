@@ -68,7 +68,7 @@ print(f"\nProcessed {len(binder_target_pairs)} binder-target pairs.")
 print(f"Response codes: {multimer_response_codes}")
 
 # Save the results to a JSON file for later use
-results_file = os.path.join(output_dir, "multimer_results.json")
+results_file = os.path.join(output_dir, "4_multimer.json")
 with open(results_file, "w") as json_file:
     json.dump({
         "binder_target_pairs": binder_target_pairs,
