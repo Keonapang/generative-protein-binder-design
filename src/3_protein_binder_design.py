@@ -85,6 +85,10 @@ if num_seq > 0: # if num_seq > 1, then run code below
             target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 500-540
         if cycle == "1D":
             target_sequence="DASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVK" # 550-590
+        if cycle == "1DE":
+            target_sequence="AYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANI" # 560-600 (cycle1DE)
+        if cycle == "1E":
+            target_sequence="LNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLY" # 600-640 (cycle1E)
     elif "2" in cycle:
         if cycle == "2A": 
             target_sequence="TKDKIGVELTGRTLADLTLLDSPIKVPLLLSEPINIIDAL", # A2000-2040
