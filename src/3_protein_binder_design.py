@@ -46,30 +46,49 @@ if num_seq > 0: # if num_seq > 1, then run code below
     precomputed_pdb_path = f"/home/ubuntu/pep{cycle}.pdb" 
     if "1" in cycle:
         if cycle == "1A": 
-            target_sequence="LKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYEL" # 400-440
+            target_sequence="LKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYEL" 
         if cycle == "1B":
-            target_sequence="EEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLG" # 450-490
+            target_sequence="EEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLG" 
         if cycle == "1C":
-            target_sequence="ISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGM" # 500-540
+            target_sequence="ISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGM" 
         if cycle == "1D":
-            target_sequence="PKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGL" # 550-590
+            target_sequence="PKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGL" 
         if cycle == "1AA":
-            target_sequence="YTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFI" # 
+            target_sequence="YTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFI" 
         if cycle == "1BB":
-            target_sequence="FAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGII" # 
+            target_sequence="FAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGII" 
         if cycle == "1CC":
-            target_sequence="CSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPL" # 
+            target_sequence="CSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPL" 
         if cycle == "1DD":
-            target_sequence="VAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKIN" # 
+            target_sequence="VAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKIN" 
+
+        if cycle == "1E": 
+            target_sequence="RSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGK" 
+        if cycle == "1F":
+            target_sequence="SEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKR" 
+        if cycle == "1G":
+            target_sequence="CSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPL" 
+        if cycle == "1H":
+            target_sequence="ANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQ" 
+
     elif "2" in cycle:
         if cycle == "2A": 
-            target_sequence="CSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREI", # A2000-2040
+            target_sequence="CSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREI", 
         if cycle == "2B":
-            target_sequence="GTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQT",# A2050-2090
+            target_sequence="GTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQT",
         if cycle == "2C":
-            target_sequence="LRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPS", # A2100-2140
+            target_sequence="LRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPS", 
         if cycle == "2D":
-            target_sequence="SEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKS", # A2150-2190
+            target_sequence="SEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKS", 
+        
+        if cycle == "2E": 
+            target_sequence="NPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLY", 
+        if cycle == "2F":
+            target_sequence="QELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTME",
+        if cycle == "2G":
+            target_sequence="PKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADIN", 
+        if cycle == "2H":
+            target_sequence="VASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRK", 
     else:
         raise ValueError("Invalid cycle number.")
 
@@ -303,13 +322,13 @@ print()
 with open(f"{outdir}/3_{name}_proteinmpnn.fasta", "w") as fasta_file:
     fasta_file.write(proteinmpnn_response["mfasta"])
 
-probs = proteinmpnn_response["probs"]
-with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
-    for i, prob_matrix in enumerate(probs):
-        probs_file.write(f"Sequence {i+1}:\n")
-        for position_probs in prob_matrix:
-            probs_file.write(",".join(map(str, position_probs)) + "\n")
-        probs_file.write("\n")
+# probs = proteinmpnn_response["probs"]
+# with open(f"{outdir}/3_{name}_proteinmpnn_probs.txt", "w") as probs_file:
+#     for i, prob_matrix in enumerate(probs):
+#         probs_file.write(f"Sequence {i+1}:\n")
+#         for position_probs in prob_matrix:
+#             probs_file.write(",".join(map(str, position_probs)) + "\n")
+#         probs_file.write("\n")
 
 # Save scores and probs to files
 # scores = proteinmpnn_response["scores"]
