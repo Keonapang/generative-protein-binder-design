@@ -1,11 +1,11 @@
-# # De Novo Protein Design Workflow using NIMs (skipped AlphaFold2 prediction step)
+# # De Novo Protein Design Workflow using NIMs (skipped AlphaFold2 steps)
 #   modified to accept a precomputed AlphaFold2 PDB structure
 # Keona Pang
-# Apr 24, 2025
+# Apr 29, 2025
 
-# Hardware requirements: 4 x A100 CRUSOE instance
-#   4 x GPU, 47 GiB GPU memory
-#   128 GB SSD drive space, 60GiB RAM,24 CPU
+# Hardware requirements: 
+#   Run on 2 x L40S GPUs x 16 CPUs | 294GiB; 128 GiB storage CRUSOE
+#   doesn't require updating docker, just reuqires python3.11 
 ##########################################################################
 
 import argparse
@@ -40,66 +40,67 @@ root = "/home/ubuntu/nvidia-workbench"
 os.makedirs(root, exist_ok=True)
 print(f"Generating {num_seq} sequences per target for cycle {cycle}...")
 
-# if num_seq > 0: 
-#     if "1" in cycle: #A380-610
-#         target_sequence="ALVQCGQPQCSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRANYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRNYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILRDASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANILNSEELDIQD",
-#         if cycle == "1A": 
-#             precomputed_pdb_path = f"/home/ubuntu/pep{cycle}.pdb" 
-#             contigs="15-25"
-#         if cycle == "1B":
-#             precomputed_pdb_path = "/home/ubuntu/pep1B.pdb" 
-#             contigs="15-25"
-#         if cycle == "1C":
-#             precomputed_pdb_path = "/home/ubuntu/pep1C.pdb" 
-#             contigs="15-25"
-#         if cycle == "1D":
-#             precomputed_pdb_path = "/home/ubuntu/pep1D.pdb" 
-#             contigs="15-25"
-#     elif "2" in cycle: #A1980-2210
-#         target_sequence="WKLKTQFNNNEYSQDLDAYNTKDKIGVELTGRTLADLTLLDSPIKVPLLLSEPINIIDALEFTIVAFVKYDKNQDVHSINLPFFETLQEYFERNRQTIIVHINIDQFVRKYRAALGKLPQQANDYLNSFNWERQVSHAKEITENDIQIALDDAKINFNEKLSQLQTYMIQFDQYIKDSYDLHDLKIAIANIIDEIIEKLK"
-        
-#         if cycle == "2A": 
-#             precomputed_pdb_path = "/home/ubuntu/pep2A.pdb" 
-#             contigs="15-25"
-#         if cycle == "2B":
-#             precomputed_pdb_path = "/home/ubuntu/pep2B.pdb" 
-#             contigs="15-25"
-#         if cycle == "2C":
-#             precomputed_pdb_path = "/home/ubuntu/pep2C.pdb"
-#             contigs="15-25"
-#         if cycle == "2D":
-#             precomputed_pdb_path = "/home/ubuntu/pep2D.pdb"
-#             contigs="15-25"
-#     else:
-#         raise ValueError("Invalid cycle number.")
 
 if num_seq > 0: # if num_seq > 1, then run code below
     contigs="15-25"
     precomputed_pdb_path = f"/home/ubuntu/pep{cycle}.pdb" 
     if "1" in cycle:
         if cycle == "1A": 
-            target_sequence="VHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRA" # 400-440
+            target_sequence="LKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYEL" # 400-440
         if cycle == "1B":
-            target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 450-490
+            target_sequence="EEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLG" # 450-490
         if cycle == "1C":
-            target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 500-540
+            target_sequence="ISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGM" # 500-540
         if cycle == "1D":
-            target_sequence="DASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVK" # 550-590
-        if cycle == "1DE":
-            target_sequence="AYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANI" # 560-600 (cycle1DE)
-        if cycle == "1E":
-            target_sequence="LNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLY" # 600-640 (cycle1E)
+            target_sequence="PKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGL" # 550-590
+        if cycle == "1AA":
+            target_sequence="YTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFI" # 
+        if cycle == "1BB":
+            target_sequence="FAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGII" # 
+        if cycle == "1CC":
+            target_sequence="CSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPL" # 
+        if cycle == "1DD":
+            target_sequence="VAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKIN" # 
     elif "2" in cycle:
         if cycle == "2A": 
-            target_sequence="TKDKIGVELTGRTLADLTLLDSPIKVPLLLSEPINIIDAL", # A2000-2040
+            target_sequence="CSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREI", # A2000-2040
         if cycle == "2B":
-            target_sequence="EFTIVAFVKYDKNQDVHSINLPFFETLQEYFERNRQTIIV",# A2050-2090
+            target_sequence="GTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQT",# A2050-2090
         if cycle == "2C":
-            target_sequence="HINIDQFVRKYRAALGKLPQQANDYLNSFNWERQVSHAKE", # A2100-2140
+            target_sequence="LRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPS", # A2100-2140
         if cycle == "2D":
-            target_sequence="ITENDIQIALDDAKINFNEKLSQLQTYMIQFDQYIKDSYD", # A2150-2190
+            target_sequence="SEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKS", # A2150-2190
     else:
         raise ValueError("Invalid cycle number.")
+
+# ---------------------- Apr 25 2025 ----------------------
+# if num_seq > 0: # if num_seq > 1, then run code below
+#     contigs="15-25"
+#     precomputed_pdb_path = f"/home/ubuntu/pep{cycle}.pdb" 
+#     if "1" in cycle:
+#         if cycle == "1A": 
+#             target_sequence="VHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRA" # 400-440
+#         if cycle == "1B":
+#             target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 450-490
+#         if cycle == "1C":
+#             target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 500-540
+#         if cycle == "1D":
+#             target_sequence="DASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVK" # 550-590
+#         if cycle == "1DE":
+#             target_sequence="AYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANI" # 560-600 (cycle1DE)
+#         if cycle == "1E":
+#             target_sequence="LNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLY" # 600-640 (cycle1E)
+#     elif "2" in cycle:
+#         if cycle == "2A": 
+#             target_sequence="TKDKIGVELTGRTLADLTLLDSPIKVPLLLSEPINIIDAL", # A2000-2040
+#         if cycle == "2B":
+#             target_sequence="EFTIVAFVKYDKNQDVHSINLPFFETLQEYFERNRQTIIV",# A2050-2090
+#         if cycle == "2C":
+#             target_sequence="HINIDQFVRKYRAALGKLPQQANDYLNSFNWERQVSHAKE", # A2100-2140
+#         if cycle == "2D":
+#             target_sequence="ITENDIQIALDDAKINFNEKLSQLQTYMIQFDQYIKDSYD", # A2150-2190
+#     else:
+#         raise ValueError("Invalid cycle number.")
 
 # Set up variables part 2
 name = f"cycle{cycle}_{num_seq}seqs_{diffusion}diff_{temp}temp"
@@ -141,11 +142,9 @@ NIM_HOST_URL_BASE = "http://localhost"
 class NIM_PORTS(Enum):
     RFDIFFUSION_PORT = 8082
     PROTEINMPNN_PORT = 8083
-    AF2_MULTIMER_PORT = 8084
 class NIM_ENDPOINTS(StrEnum):
     RFDIFFUSION =  "biology/ipd/rfdiffusion/generate"
     PROTEINMPNN =  "biology/ipd/proteinmpnn/predict"
-    AF2_MULTIMER = "protein-structure/alphafold2/multimer/predict-structure-from-sequences"
 
 def query_nim(
             payload: Dict[str, Any],
