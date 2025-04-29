@@ -45,14 +45,11 @@ done
 for cycle in "1A" "1B" "1C" "1D" "2A" "2B" "2C" "2D"; do
     python3.11 /home/ubuntu/3_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 50 --temp 0.5
 done
-for cycle in "1DE" "1E"; do
+for cycle in "1AA" "1BB" "1CC" "1DD"; do
     python3.11 /home/ubuntu/3_protein_binder_design.py --cycle "$cycle" --num_seq 1 --diffusion 50 --temp 0.5
 done
 # ----------------------------------------------------
 
-for cycle in "1" "2"; do
-    python3.11 /home/ubuntu/3_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 50 --temp 0.4
-done
 
 # python3.11 3_protein_binder_design.py --cycle "$cycle" --num_seq 4 --diffusion 25 --temp 0.4
 # python3.11 3_protein_binder_design.py --cycle "$cycle" --num_seq 5 --diffusion 25 --temp 0.4
