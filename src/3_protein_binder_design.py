@@ -40,86 +40,29 @@ root = "/home/ubuntu/nvidia-workbench"
 os.makedirs(root, exist_ok=True)
 print(f"Generating {num_seq} sequences per target for cycle {cycle}...")
 
-
 if num_seq > 0: # if num_seq > 1, then run code below
     contigs="15-25"
     precomputed_pdb_path = f"/home/ubuntu/pep{cycle}.pdb" 
     if "1" in cycle:
         if cycle == "1A": 
-            target_sequence="LKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYEL" 
+            target_sequence="LKTSQCTLKEVYGFNPEGKALLKKTKNSEEFAAAMSRYEL" # A91-130
         if cycle == "1B":
-            target_sequence="EEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLG" 
+            target_sequence="EEAKQVLFLDTVYGNCSTHFTVKTRKGNVATEISTERDLG"  #A170-209
         if cycle == "1C":
-            target_sequence="ISSSQSCQYTLDAKRKHVAEAICKEQHLFLPFSYKNKYGM" 
+            target_sequence="VAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKIN" # A255-294
         if cycle == "1D":
-            target_sequence="PKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGL" 
-        if cycle == "1AA":
-            target_sequence="YTYNYEAESSSGVPGTADSRSATRINCKVELEVPQLCSFI" 
-        if cycle == "1BB":
-            target_sequence="FAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKRGII" 
-        if cycle == "1CC":
-            target_sequence="CSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPL" 
-        if cycle == "1DD":
-            target_sequence="VAEAICKEQHLFLPFSYKNKYGMVAQVTQTLKLEDTPKIN" 
-
-        if cycle == "1E": 
-            target_sequence="RSATRINCKVELEVPQLCSFILKTSQCTLKEVYGFNPEGK" 
-        if cycle == "1F":
-            target_sequence="SEEFAAAMSRYELKLAIPEGKQVFLYPEKDEPTYILNIKR" 
-        if cycle == "1G":
-            target_sequence="CSTHFTVKTRKGNVATEISTERDLGQCDRFKPIRTGISPL" 
-        if cycle == "1H":
-            target_sequence="ANLFNKLVTELRGLSDEAVTSLLPQLIEVSSPITLQALVQ" 
-
+            target_sequence="PKQAEAVLKTLQELKKLTISEQNIQRANLFNKLVTELRGL" # A318-357
     elif "2" in cycle:
         if cycle == "2A": 
-            target_sequence="CSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREI", 
+            target_sequence="CSTHILQWLKRVHANPLLIDVVTYLVALIPEPSAQQLREI", # A390-429
         if cycle == "2B":
-            target_sequence="GTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQT",
+            target_sequence="GTQELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQT", # A459-498
         if cycle == "2C":
-            target_sequence="LRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPS", 
+            target_sequence="LRKMEPKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPS", # A531-570
         if cycle == "2D":
-            target_sequence="SEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLYKS", 
-        
-        if cycle == "2E": 
-            target_sequence="NPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRATLY", 
-        if cycle == "2F":
-            target_sequence="QELLDIANYLMEQIQDDCTGDEDYTYLILRVIGNMGQTME",
-        if cycle == "2G":
-            target_sequence="PKDKDQEVLLQTFLDDASPGDKRLAAYLMLMRSPSQADIN", 
-        if cycle == "2H":
-            target_sequence="VASHIANILNSEELDIQDLKKLVKEALKESQLPTVMDFRK", 
+            target_sequence = "EQVKNFVASHIANILNSEELDIQDLKKLVKEALKESQLPT" # A587-626
     else:
         raise ValueError("Invalid cycle number.")
-
-# ---------------------- Apr 25 2025 ----------------------
-# if num_seq > 0: # if num_seq > 1, then run code below
-#     contigs="15-25"
-#     precomputed_pdb_path = f"/home/ubuntu/pep{cycle}.pdb" 
-#     if "1" in cycle:
-#         if cycle == "1A": 
-#             target_sequence="VHANPLLIDVVTYLVALIPEPSAQQLREIFNMARDQRSRA" # 400-440
-#         if cycle == "1B":
-#             target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 450-490
-#         if cycle == "1C":
-#             target_sequence="NYHKTNPTGTQELLDIANYLMEQIQDDCTGDEDYTYLILR" # 500-540
-#         if cycle == "1D":
-#             target_sequence="DASPGDKRLAAYLMLMRSPSQADINKIVQILPWEQNEQVK" # 550-590
-#         if cycle == "1DE":
-#             target_sequence="AYLMLMRSPSQADINKIVQILPWEQNEQVKNFVASHIANI" # 560-600 (cycle1DE)
-#         if cycle == "1E":
-#             target_sequence="LNSEELDIQDLKKLVKEALKESQLPTVMDFRKFSRNYQLY" # 600-640 (cycle1E)
-#     elif "2" in cycle:
-#         if cycle == "2A": 
-#             target_sequence="TKDKIGVELTGRTLADLTLLDSPIKVPLLLSEPINIIDAL", # A2000-2040
-#         if cycle == "2B":
-#             target_sequence="EFTIVAFVKYDKNQDVHSINLPFFETLQEYFERNRQTIIV",# A2050-2090
-#         if cycle == "2C":
-#             target_sequence="HINIDQFVRKYRAALGKLPQQANDYLNSFNWERQVSHAKE", # A2100-2140
-#         if cycle == "2D":
-#             target_sequence="ITENDIQIALDDAKINFNEKLSQLQTYMIQFDQYIKDSYD", # A2150-2190
-#     else:
-#         raise ValueError("Invalid cycle number.")
 
 # Set up variables part 2
 name = f"cycle{cycle}_{num_seq}seqs_{diffusion}diff_{temp}temp"
